@@ -1,0 +1,25 @@
+{
+  "name": "led_node",
+  "version": "0.1.0",
+  "author": "swong",
+  "scripts": {
+    "client": "",
+    "server": "nodemon --exec babel-node server/server.js --ignore client",
+    "start": "concurrently --kill-others-on-fail \"npm run server\", \"npm run client\""
+  },
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.2",
+    "request": "^2.88.0",
+    "rpi-gpio": "^2.1.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/node": "^7.6.1",
+    "@babel/preset-env": "^7.6.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "concurrently": "^4.1.2"
+  }
+}

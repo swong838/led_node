@@ -1,0 +1,11 @@
+{
+  "name": "led_node_client",
+  "version": "0.1.0",
+  "author": "swong",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.40.2"
+  },
+  "proxy": "http://127.0.0.1:5000"
+}
