@@ -1,0 +1,27 @@
+{
+  "name": "led_node_client",
+  "version": "0.1.0",
+  "author": "swong",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack",
+    "develop" : "./node_modules/.bin/webpack --watch"
+  },
+  "dependencies": {
+    "es6-promise": "^4.2.8",
+    "react": "^16.9.0",
+    "react-color-picker": "^4.0.2",
+    "react-dom": "^16.9.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/node": "^7.6.1",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
+  },
+  "proxy": "http://127.0.0.1:5000"
+}
