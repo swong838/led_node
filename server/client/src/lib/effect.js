@@ -4,11 +4,7 @@ class Effect {
         this._value = value;
         this.direction = direction;
     }
-
-    getValue = () => {
-        this._value = Math.max(this._value - this.FALLOFF, 0);
-        return this._value;
-    }
+    apply = () => [Math.max(this._value - this.FALLOFF, 0), this.direction]
 }
 
 export default Effect;

@@ -16,7 +16,7 @@ class App extends Component {
         };
 
         this.pixels = [];
-        for (let p = 0; p < 15; p++) {
+        for (let p = 0; p < 5; p++) {
             this.pixels.push(new Pixel(p));
         }
 
@@ -32,12 +32,22 @@ class App extends Component {
     }
 
     poke = index => {
-        this.pixels[index] && this.pixels[index].addEffect(new Effect(20, 1));
+        this.pixels[index] && this.pixels[index].addEffect(new Effect(20, 0));
     }
 
     refresh = () => {
         let cells = [];
         this.pixels.forEach((pixel, index) => {
+            const {left, right} = pixel.exports;
+            const leftNeighbor = this.pixels[index-1];
+            const rightNeighbor = this.pixels[index+1];
+
+            if (!leftNeighbor) {pixel.clearLeft();}
+            else {leftNeighbor.addEffect(left);}
+
+            if (!rightNeighbor) {pixel.clearRight();}
+            else {rightNeighbor.addEffect(right);}
+
             cells.push(
                 <PixelView
                     key={index}
@@ -45,14 +55,6 @@ class App extends Component {
                     callback={() => this.poke(index)}
                 />
             );
-            const {left, right} = pixel.exports;
-
-            const leftNeighbor = this.pixels[index-1];
-            const rightNeighbor = this.pixels[index+1];
-
-            leftNeighbor && left.length && leftNeighbor.addEffect(left);
-            rightNeighbor && right.length && rightNeighbor.addEffect(right);
-
         });
         this.setState({pixelViews: cells});
     }
