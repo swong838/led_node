@@ -5,7 +5,31 @@ import Pixel from './components/pixel';
 import Effect from './lib/effect';
 
 
-const PixelView = ({val, callback}) => <div className="pixel" onClick={callback}>{val}</div>
+const PixelView = ({
+    val,
+    left,
+    right,
+    callback
+}) => {
+    return (
+        <div className="pixel" onClick={callback}>
+            <table>
+                <thead>
+                    <tr>
+                        <th colSpan="2">{val}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td className="l">{left}</td>
+                        <td className="r">{right}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
 
 class App extends Component {
     constructor(props) {
@@ -16,13 +40,13 @@ class App extends Component {
         };
 
         this.pixels = [];
-        for (let p = 0; p < 5; p++) {
+        for (let p = 0; p < 15; p++) {
             this.pixels.push(new Pixel(p));
         }
 
         setInterval(() => {
             this.state.run && this.refresh();
-        }, 250);
+        }, 100);
     }
 
     addEffects = () => {
@@ -42,16 +66,17 @@ class App extends Component {
             const leftNeighbor = this.pixels[index-1];
             const rightNeighbor = this.pixels[index+1];
 
-            if (!leftNeighbor) {pixel.clearLeft();}
-            else {leftNeighbor.addEffect(left);}
+            leftNeighbor && leftNeighbor.addEffect(left);
+            rightNeighbor && rightNeighbor.addEffect(right);
 
-            if (!rightNeighbor) {pixel.clearRight();}
-            else {rightNeighbor.addEffect(right);}
+            pixel.clearExports();
 
             cells.push(
                 <PixelView
                     key={index}
                     val={pixel.getValue()}
+                    left={left.length}
+                    right={right.length}
                     callback={() => this.poke(index)}
                 />
             );

@@ -17,7 +17,7 @@ class Pixel {
     addEffect = effect => {this.effectQueue.push(effect);}
     clearLeft = () => {this.exports.left = [];}
     clearRight = () => {this.exports.right = [];}
-    resetExports = () => {this.clearLeft(); this.clearRight();}
+    clearExports = () => {this.clearLeft(); this.clearRight();}
     
     getValue = () => {
         let delta = 0;
@@ -38,7 +38,6 @@ class Pixel {
                 this.exports.left.push(new Effect(effectValue, -1));
                 this.exports.right.push(new Effect(effectValue, 1));
             }
-
             delta += effectValue;
         }
         const newValue = (this._value + delta - this.FALLOFF);
