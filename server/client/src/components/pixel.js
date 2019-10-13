@@ -2,7 +2,8 @@ import Effect from '../lib/effect';
 
 class Pixel {
 
-    FALLOFF = 4;
+    FALLOFF = 3;
+    MAX = 255 * 3;
 
     constructor(index) {
         this.index = index;
@@ -41,7 +42,7 @@ class Pixel {
             delta += effectValue;
         }
         const newValue = (this._value + delta - this.FALLOFF);
-        this._value = Math.max(newValue, 0);
+        this._value = Math.min(Math.max(newValue, 0), this.MAX);
         return this._value;
     }
 }
