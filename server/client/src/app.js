@@ -13,9 +13,9 @@ const PixelView = ({
     val,
     callback
 }) => {
-    const r = Math.max(val - 255, 0);
+    const b = Math.max(val - 255, 0);
     val -= 255;
-    const b = Math.max(val - 120, 0);
+    const r = Math.max(val - 120, 0);
     val -= 120;
     const g = Math.max(val - 60, 0);
     return <div className="pixel" style={{backgroundColor: `rgb(${r},${g},${b})`}} onClick={callback} />

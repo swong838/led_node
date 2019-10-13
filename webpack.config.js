@@ -1,8 +1,8 @@
 var webpack = require('webpack');
 var path = require('path');
 
-var SRC_DIR = path.resolve(__dirname, 'src');
-var BUILD_DIR = path.resolve(__dirname, './build/static');
+var SRC_DIR = path.resolve(__dirname, './server/client/src');
+var BUILD_DIR = path.resolve(__dirname, './server/client/build/static');
 
 module.exports = {
     mode: "development",

@@ -3,26 +3,31 @@
   "version": "0.1.0",
   "author": "swong",
   "scripts": {
-    "client": "",
+    "client": "./node_modules/.bin/webpack --watch",
     "server": "nodemon --exec ./node_modules/.bin/babel-node server/server.js --ignore client",
-    "start": "concurrently --kill-others-on-fail \"npm run server\", \"npm run client\""
+    "develop": "./node_modules/.bin/concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "dependencies": {
+    "@babel/cli": "^7.6.0",
     "@babel/core": "^7.6.2",
     "@babel/node": "^7.6.2",
-    "@babel/cli": "^7.6.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "es6-promise": "^4.2.8",
     "express": "^4.17.1",
     "nodemon": "^1.19.2",
+    "react": "^16.9.0",
+    "react-color-picker": "^4.0.2",
+    "react-dom": "^16.9.0",
     "request": "^2.88.0",
-    "rpi-gpio": "^2.1.4",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9"
+    "rpi-gpio": "^2.1.4"
   },
   "devDependencies": {
-    "concurrently": "^4.1.2"
+    "concurrently": "^4.1.2",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
   }
 }
