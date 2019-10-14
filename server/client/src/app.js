@@ -4,7 +4,10 @@ import ReactDOM from 'react-dom';
 import Pixel from './lib/pixel';
 import Effect from './lib/effect';
 
-const PIXELCOUNT = 20;
+const PIXELCOUNT = 25;
+
+const WH = 75;
+
 const POKESTRENGTH = 180;
 const TICKRATE = 10;
 const MAX_FRAMES_BETWEEN_UPDATES = 300;
@@ -16,19 +19,26 @@ const PixelView = ({
     right,
     callback
 }) => {
+
+    const rawVal = val;
+
     const b = Math.max(val - 255, 0);
     val -= 255;
     const r = Math.max(val - 120, 0);
     val -= 120;
     const g = Math.max(val - 60, 0);
 
-    const pixelbg = {backgroundColor: `rgb(${r},${g},${b})`}
+    const pixelstyle = {
+        width: `${WH}px`,
+        height: `${WH}px`,
+        backgroundColor: `rgb(${r},${g},${b})`
+    }
     const diag = {color: `rgb(${255-r},${255-g},${255-b})`}
 
     return (
-        <div className="pixel" style={pixelbg} onClick={callback}>
-            <h5 style={diag}>{fx}</h5>
-            <code style={diag}>{left} : {right}</code>
+        <div className="pixel" style={pixelstyle} onClick={callback}>
+            <h5 style={diag}>{rawVal}</h5>
+            <code style={diag}>{left} : {fx} : {right}</code>
         </div>
     )
 }
@@ -73,28 +83,32 @@ class App extends Component {
         //     this.addEffects();
         // }
 
-        let cells = [];
         this.pixels.forEach((pixel, index) => {
             const {left, right} = pixel.exports;
             const leftNeighbor = this.pixels[index-1];
             const rightNeighbor = this.pixels[index+1];
 
+            //leftNeighbor && pixel.addEffect(leftNeighbor.ex)
+
             leftNeighbor && leftNeighbor.addEffect(left);
             rightNeighbor && rightNeighbor.addEffect(right);
             pixel.clearExports();
-
-            cells.push(
-                <PixelView
-                    key={index}
-                    val={pixel.getValue()}
-                    fx={pixel.effectQueue.length}
-                    left={left.length}
-                    right={right.length}
-                    callback={() => this.poke(index)}
-                />
-            );
         });
-        this.setState({pixelViews: cells});
+
+        this.setState({
+            pixelViews: this.pixels.map(
+                (pixel, index) => {
+                    return (<PixelView
+                        key={index}
+                        val={pixel.getValue()}
+                        fx={pixel.effectQueue.length}
+                        left={pixel.exports.left.length}
+                        right={pixel.exports.right.length}
+                        callback={() => this.poke(index)}
+                    />)
+                }
+            )
+        });
     }
 
     componentDidMount = () => {
