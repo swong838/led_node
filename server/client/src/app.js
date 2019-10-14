@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import Pixel from './components/pixel';
+import Pixel from './lib/pixel';
 import Effect from './lib/effect';
 
-const PIXELCOUNT = 80;
-const POKESTRENGTH = 80;
+const PIXELCOUNT = 20;
+const POKESTRENGTH = 180;
 const TICKRATE = 10;
 const MAX_FRAMES_BETWEEN_UPDATES = 300;
 
 const PixelView = ({
     val,
+    fx,
+    left,
+    right,
     callback
 }) => {
     const b = Math.max(val - 255, 0);
@@ -18,7 +21,16 @@ const PixelView = ({
     const r = Math.max(val - 120, 0);
     val -= 120;
     const g = Math.max(val - 60, 0);
-    return <div className="pixel" style={{backgroundColor: `rgb(${r},${g},${b})`}} onClick={callback} />
+
+    const pixelbg = {backgroundColor: `rgb(${r},${g},${b})`}
+    const diag = {color: `rgb(${255-r},${255-g},${255-b})`}
+
+    return (
+        <div className="pixel" style={pixelbg} onClick={callback}>
+            <h5 style={diag}>{fx}</h5>
+            <code style={diag}>{left} : {right}</code>
+        </div>
+    )
 }
 
 
@@ -30,7 +42,7 @@ class App extends Component {
             pixelViews: []
         };
 
-        this.framesUntilNextEffects = 0;
+        this.framesUntilNextEffects = 1;
 
         this.pixels = [];
         for (let p = 0; p < PIXELCOUNT; p++) {
@@ -52,16 +64,14 @@ class App extends Component {
             ));
         }
     }
-
-    poke = index => {
-        this.pixels[index] && this.pixels[index].addEffect(new Effect(POKESTRENGTH, 0));
-    }
+    reset = () => {this.pixels.forEach(pixel => pixel.reset()); this.refresh();}
+    poke = index => this.pixels[index].addEffect(new Effect(POKESTRENGTH, 0))
 
     refresh = () => {
-        if (this.framesUntilNextEffects-- <= 0) {
-            this.framesUntilNextEffects = Math.ceil(Math.random() * MAX_FRAMES_BETWEEN_UPDATES);
-            this.addEffects();
-        }
+        // if (this.framesUntilNextEffects-- <= 0) {
+        //     this.framesUntilNextEffects = Math.ceil(Math.random() * MAX_FRAMES_BETWEEN_UPDATES);
+        //     this.addEffects();
+        // }
 
         let cells = [];
         this.pixels.forEach((pixel, index) => {
@@ -77,6 +87,9 @@ class App extends Component {
                 <PixelView
                     key={index}
                     val={pixel.getValue()}
+                    fx={pixel.effectQueue.length}
+                    left={left.length}
+                    right={right.length}
                     callback={() => this.poke(index)}
                 />
             );
@@ -97,6 +110,7 @@ class App extends Component {
             <React.Fragment>
                 { this.state.pixelViews }
                 <section className="controls">
+                    <button onClick={this.reset}>reset</button>
                     <button onClick={this.addEffects}>add</button>
                     <button onClick={this.refresh}>step</button>
                     <button onClick={this.toggle}>{this.state.run ? 'stop' : 'start'}</button>

@@ -1,10 +1,31 @@
 class Effect {
-    constructor(value, direction) {
-        this.FALLOFF = 2;
-        this._value = value;
+    constructor(strength, direction, duration=12) {
+        this.falloff = 15;
+        this.duration = duration;
+        this.timeToLive = duration;
+        this.strength = strength;
+        this.powerPerTick = this.strength / this.duration;
         this.direction = direction;
     }
-    apply = () => [Math.max(this._value - this.FALLOFF, 0), this.direction]
+
+    apply = () => {
+
+        if (!this.timeToLive) {
+            return {
+                propagate: true,
+                strength: this.strength - this.falloff,
+                duration: this.duration,
+                direction: this.direction
+            }
+        }
+        else {
+            this.timeToLive--;
+            return {
+                propagate: false,
+                strength: this.powerPerTick,
+            }
+        }
+    }
 }
 
 export default Effect;
