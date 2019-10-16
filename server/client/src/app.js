@@ -4,43 +4,23 @@ import ReactDOM from 'react-dom';
 import Pixel from './lib/pixel';
 import Effect from './lib/effect';
 
-const PIXELCOUNT = 25;
 
-const WH = 75;
+import PixelView from './components/pixel';
+
+const PIXELCOUNT = 25;
 
 const POKESTRENGTH = 180;
 const TICKRATE = 10;
 const MAX_FRAMES_BETWEEN_UPDATES = 300;
 
-const PixelView = ({
-    val,
-    fx,
-    left,
-    right,
-    callback
-}) => {
 
-    const rawVal = val;
-
-    const b = Math.max(val - 255, 0);
-    val -= 255;
-    const r = Math.max(val - 120, 0);
-    val -= 120;
-    const g = Math.max(val - 60, 0);
-
-    const pixelstyle = {
-        width: `${WH}px`,
-        height: `${WH}px`,
-        backgroundColor: `rgb(${r},${g},${b})`
-    }
-    const diag = {color: `rgb(${255-r},${255-g},${255-b})`}
-
-    return (
-        <div className="pixel" style={pixelstyle} onClick={callback}>
-            <h5 style={diag}>{rawVal}</h5>
-            <code style={diag}>{left} : {fx} : {right}</code>
-        </div>
-    )
+const randomEffect = () => {
+    return {
+        strength: Math.ceil(Math.random() * 255 * 2) + 128,
+        direction: 0,
+        duration: 12,
+        spillover: 255
+    };
 }
 
 
@@ -69,13 +49,11 @@ class App extends Component {
         while(numEffects--) {
             this.pixels[
                 Math.floor(Math.random() * PIXELCOUNT)
-            ].addEffect(
-                new Effect(Math.ceil(Math.random() * 255 * 2), 0
-            ));
+            ].addEffect(new Effect(randomEffect()));
         }
     }
     reset = () => {this.pixels.forEach(pixel => pixel.reset()); this.refresh();}
-    poke = index => this.pixels[index].addEffect(new Effect(POKESTRENGTH, 0))
+    poke = index => this.pixels[index].addEffect(new Effect({...randomEffect(), strength: POKESTRENGTH}))
 
     refresh = () => {
         // if (this.framesUntilNextEffects-- <= 0) {
@@ -98,13 +76,18 @@ class App extends Component {
         this.setState({
             pixelViews: this.pixels.map(
                 (pixel, index) => {
+
+                    const settings = {
+                        val: pixel.getValue(),
+                        fx: pixel.effectQueue.length,
+                        left: pixel.exports.left.length,
+                        right: pixel.exports.right.length,
+                    }
+
                     return (<PixelView
                         key={index}
-                        val={pixel.getValue()}
-                        fx={pixel.effectQueue.length}
-                        left={pixel.exports.left.length}
-                        right={pixel.exports.right.length}
                         callback={() => this.poke(index)}
+                        {...settings}
                     />)
                 }
             )

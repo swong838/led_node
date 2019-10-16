@@ -19,18 +19,21 @@ class Pixel {
     }
 
     addEffect = effect => {this.effectQueue.push(effect);}
-    propagate = ({strength, direction, duration}) => {
-        if (direction < 0) {
-            this.exports.left.push(new Effect(strength, this.LEFT, duration));
+
+    propagate = effectSettings => {        
+        if (effectSettings.direction < 0) {
+            this.exports.left.push(new Effect({...effectSettings}));
         }
-        else if (direction > 0) {
-            this.exports.right.push(new Effect(strength, this.RIGHT, duration));
+        else if (effectSettings.direction > 0) {
+            this.exports.right.push(new Effect({...effectSettings}));
         }
         else {
-            this.exports.left.push(new Effect(strength, this.LEFT, duration));
-            this.exports.right.push(new Effect(strength, this.RIGHT, duration));
+            this.exports.left.push(new Effect({...effectSettings, direction: this.LEFT}));
+            this.exports.right.push(new Effect({...effectSettings, direction: this.RIGHT}));
         }
     }
+
+
     clearLeft = () => {this.exports.left = [];}
     clearRight = () => {this.exports.right = [];}
     clearExports = () => {this.clearLeft(); this.clearRight();}
@@ -44,7 +47,13 @@ class Pixel {
             const effect = this.effectQueue[i];
             if (!effect) continue;
 
-            const outcome = effect.apply();
+            const outcome = effect.apply(this._value);
+
+            if (outcome.expire) {
+                this.effectQueue.pop();
+                continue;
+            }
+
             if (outcome.propagate) {
                 this.effectQueue.pop();
                 this.propagate(outcome);
