@@ -7,19 +7,19 @@ import Effect from './lib/effect';
 
 import PixelView from './components/pixel';
 
-const PIXELCOUNT = 25;
+const PIXELCOUNT = 80;
 
 const POKESTRENGTH = 180;
-const TICKRATE = 10;
+const TICKRATE = 25;
 const MAX_FRAMES_BETWEEN_UPDATES = 300;
 
 
 const randomEffect = () => {
     return {
-        strength: Math.ceil(Math.random() * 255 * 2) + 128,
+        strength: Math.ceil(Math.random() * 255 * 2) + 512,
         direction: 0,
-        duration: 12,
-        spillover: 255
+        duration: 4,
+        spillover: 600
     };
 }
 
@@ -54,6 +54,8 @@ class App extends Component {
     }
     reset = () => {this.pixels.forEach(pixel => pixel.reset()); this.refresh();}
     poke = index => this.pixels[index].addEffect(new Effect({...randomEffect(), strength: POKESTRENGTH}))
+    componentDidMount = () => this.refresh()
+    toggle = () => this.setState({run: !this.state.run})
 
     refresh = () => {
         // if (this.framesUntilNextEffects-- <= 0) {
@@ -65,9 +67,6 @@ class App extends Component {
             const {left, right} = pixel.exports;
             const leftNeighbor = this.pixels[index-1];
             const rightNeighbor = this.pixels[index+1];
-
-            //leftNeighbor && pixel.addEffect(leftNeighbor.ex)
-
             leftNeighbor && leftNeighbor.addEffect(left);
             rightNeighbor && rightNeighbor.addEffect(right);
             pixel.clearExports();
@@ -94,14 +93,7 @@ class App extends Component {
         });
     }
 
-    componentDidMount = () => {
-        this.refresh();
-    }
 
-    toggle = () => {
-        this.setState({run: !this.state.run})
-    }
-    
     render() {
         return (
             <React.Fragment>

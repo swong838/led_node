@@ -5,7 +5,7 @@ class Pixel {
     RIGHT = 1;
     LEFT = -1;
 
-    FALLOFF = 3;
+    FALLOFF = 8;
     MAX = 255 * 3;
 
     constructor(index) {
@@ -55,9 +55,7 @@ class Pixel {
             }
 
             if (outcome.propagate) {
-                this.effectQueue.pop();
                 this.propagate(outcome);
-                continue;
             }
             delta += outcome.strength;
         };

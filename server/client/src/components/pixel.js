@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-const WH = 60;
+const WH = 20;
 
 const PixelView = ({
     val,
@@ -25,13 +25,14 @@ const PixelView = ({
         backgroundColor: `rgb(${r},${g},${b})`
     }
     const diag = {color: `rgb(${255-r},${255-g},${255-b})`}
-
-    return (
-        <div className="pixel" style={pixelstyle} onClick={callback}>
+    const diagnostics = left && right && fx && (
+        <React.fragment>
             <h5 style={diag}>{rawVal}</h5>
-            <code style={diag}>{left} : {fx} : {right}</code>
-        </div>
-    )
+            <code style={diag}>{left}:{fx}:{right}</code>
+        </React.fragment>
+    ) || null;
+
+    return <div className="pixel" style={pixelstyle} onClick={callback}>{diagnostics}</div>
 }
 
 export default PixelView;
