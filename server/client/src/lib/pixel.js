@@ -4,12 +4,11 @@ class Pixel {
 
     RIGHT = 1;
     LEFT = -1;
-
-    FALLOFF = 8;
     MAX = 255 * 3;
 
-    constructor(index) {
+    constructor(index, falloff=8) {
         this.index = index;
+        this.falloff = falloff;
         this.effectQueue = [];
         this._value = 0;
         this.exports = {
@@ -60,7 +59,7 @@ class Pixel {
             delta += outcome.strength;
         };
 
-        const newValue = (this._value + delta - this.FALLOFF);
+        const newValue = (this._value + delta - this.falloff);
         this._value = Math.min(Math.max(newValue, 0), this.MAX);
         return this._value;
     }

@@ -3,36 +3,37 @@ import ReactDOM from 'react-dom';
 
 import Pixel from './lib/pixel';
 import Effect from './lib/effect';
-import {pixels, tickrate} from './lib/constants';
+import {
+    pixels,
+    tickrate,
+    initialDecay,
+    initialEffectFalloff,
+    initialEffectDuration,
+    initialEffectSpillover
+} from './lib/constants';
 
 import PixelView from './components/pixel';
 
 const POKESTRENGTH = 180;
-const MAX_FRAMES_BETWEEN_UPDATES = 300;
-
-
-const randomEffect = () => {
-    return {
-        strength: Math.ceil(Math.random() * 255 * 2) + 255,
-        direction: 0,
-        duration: 12,
-        propagateAfter: 8
-    };
-}
+const MAX_FRAMES_BETWEEN_UPDATES = 500;
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
             run: false,
-            pixelViews: []
+            pixelViews: [],
+            pixelFalloff: initialDecay,
+            effectDuration: initialEffectDuration,
+            effectFalloff: initialEffectFalloff,
+            effectPropagateAfter: initialEffectSpillover
         };
 
         this.framesUntilNextEffects = 1;
 
         this.pixels = [];
         for (let p = 0; p < pixels; p++) {
-            this.pixels.push(new Pixel(p));
+            this.pixels.push(new Pixel(p, this.state.pixelFalloff));
         }
 
         setInterval(() => {
@@ -40,24 +41,35 @@ class App extends Component {
         }, tickrate);
     }
 
+    randomEffect = () => {
+        return {
+            strength: Math.ceil(Math.random() * 255 * 2) + 255,
+            direction: 0,
+            decay: this.state.effectFalloff,
+            duration: this.state.effectDuration,
+            propagateAfter: this.state.effectPropagateAfter
+        };
+    }
+
+
     addEffects = () => {
         let numEffects = Math.ceil(Math.random() * 4);
         while(numEffects--) {
             this.pixels[
                 Math.floor(Math.random() * pixels)
-            ].addEffect(new Effect(randomEffect()));
+            ].addEffect(new Effect(this.randomEffect()));
         }
     }
     reset = () => {this.pixels.forEach(pixel => pixel.reset()); this.refresh();}
-    poke = index => this.pixels[index].addEffect(new Effect({...randomEffect(), strength: POKESTRENGTH}))
+    poke = index => this.pixels[index].addEffect(new Effect({...this.randomEffect(), strength: POKESTRENGTH}))
     componentDidMount = () => this.refresh()
     toggle = () => this.setState({run: !this.state.run})
 
     refresh = () => {
-        // if (this.framesUntilNextEffects-- <= 0) {
-        //     this.framesUntilNextEffects = Math.ceil(Math.random() * MAX_FRAMES_BETWEEN_UPDATES);
-        //     this.addEffects();
-        // }
+        if (this.framesUntilNextEffects-- <= 0) {
+            this.framesUntilNextEffects = Math.ceil(Math.random() * MAX_FRAMES_BETWEEN_UPDATES);
+            this.addEffects();
+        }
 
         this.pixels.forEach((pixel, index) => {
             const {left, right} = pixel.exports;
@@ -89,6 +101,13 @@ class App extends Component {
         });
     }
 
+    tune = (setting, e) => {
+        const newVal = e.target.value.replace(/[^\d]/g, '');
+        this.setState({[setting]: newVal})
+        if (setting === 'pixelFalloff') {
+            this.pixels.forEach(pixel => pixel.falloff = newVal);
+        }
+    }
 
     render() {
         return (
@@ -101,6 +120,54 @@ class App extends Component {
                     <button onClick={this.toggle}>{this.state.run ? 'stop' : 'start'}</button>
                 </section>
                 <section className="controls">
+                    <label>
+                        pixel decay
+                        <input
+                            type="range"
+                            min="0"
+                            max="50"
+                            step="1"
+                            onChange={e => this.tune('pixelFalloff', e)}
+                            value={this.state.pixelFalloff}
+                        />
+                        <code>{this.state.pixelFalloff}</code>
+                    </label>
+                    <label>
+                        effect falloff per step
+                        <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            step="5"
+                            onChange={e => this.tune('effectFalloff', e)}
+                            value={this.state.effectFalloff}
+                        />
+                        <code>{this.state.effectFalloff}</code>
+                    </label>
+                    <label>
+                        effect duration
+                        <input
+                            type="range"
+                            min="0"
+                            max="30"
+                            step="1"
+                            onChange={e => this.tune('effectDuration', e)}
+                            value={this.state.effectDuration}
+                        />
+                        <code>{this.state.effectDuration}</code>
+                    </label>
+                    <label>
+                        effect spillover after
+                        <input
+                            type="range"
+                            min="0"
+                            max="30"
+                            step="1"
+                            onChange={e => this.tune('effectPropagateAfter', e)}
+                            value={this.state.effectPropagateAfter}
+                        />
+                        <code>{this.state.effectPropagateAfter}</code>
+                    </label>
                     <h5>{this.framesUntilNextEffects}</h5>
                 </section>
             </React.Fragment>
