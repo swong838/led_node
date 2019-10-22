@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-
-const WH = 20;
+import React from 'react';
+import {width, height, debug} from '../lib/constants';
 
 const PixelView = ({
     val,
@@ -20,18 +18,17 @@ const PixelView = ({
     const g = Math.max(val - 60, 0);
 
     const pixelstyle = {
-        width: `${WH}px`,
-        height: `${WH}px`,
+        width: `${width}px`,
+        height: `${height}px`,
         backgroundColor: `rgb(${r},${g},${b})`
     }
     const diag = {color: `rgb(${255-r},${255-g},${255-b})`}
-    const diagnostics = left && right && fx && (
-        <React.fragment>
+    const diagnostics = debug && (
+        <React.Fragment>
             <h5 style={diag}>{rawVal}</h5>
             <code style={diag}>{left}:{fx}:{right}</code>
-        </React.fragment>
+        </React.Fragment>
     ) || null;
-
     return <div className="pixel" style={pixelstyle} onClick={callback}>{diagnostics}</div>
 }
 

@@ -49,14 +49,14 @@ class Pixel {
 
             const outcome = effect.apply(this._value);
 
-            if (outcome.expire) {
-                this.effectQueue.pop();
-                continue;
-            }
-
             if (outcome.propagate) {
                 this.propagate(outcome);
             }
+
+            if (outcome.expire) {
+                this.effectQueue.pop();
+            }
+
             delta += outcome.strength;
         };
 

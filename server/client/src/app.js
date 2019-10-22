@@ -3,26 +3,22 @@ import ReactDOM from 'react-dom';
 
 import Pixel from './lib/pixel';
 import Effect from './lib/effect';
-
+import {pixels, tickrate} from './lib/constants';
 
 import PixelView from './components/pixel';
 
-const PIXELCOUNT = 80;
-
 const POKESTRENGTH = 180;
-const TICKRATE = 25;
 const MAX_FRAMES_BETWEEN_UPDATES = 300;
 
 
 const randomEffect = () => {
     return {
-        strength: Math.ceil(Math.random() * 255 * 2) + 512,
+        strength: Math.ceil(Math.random() * 255 * 2) + 255,
         direction: 0,
-        duration: 4,
-        spillover: 600
+        duration: 12,
+        propagateAfter: 8
     };
 }
-
 
 class App extends Component {
     constructor(props) {
@@ -35,20 +31,20 @@ class App extends Component {
         this.framesUntilNextEffects = 1;
 
         this.pixels = [];
-        for (let p = 0; p < PIXELCOUNT; p++) {
+        for (let p = 0; p < pixels; p++) {
             this.pixels.push(new Pixel(p));
         }
 
         setInterval(() => {
             this.state.run && this.refresh();
-        }, TICKRATE);
+        }, tickrate);
     }
 
     addEffects = () => {
         let numEffects = Math.ceil(Math.random() * 4);
         while(numEffects--) {
             this.pixels[
-                Math.floor(Math.random() * PIXELCOUNT)
+                Math.floor(Math.random() * pixels)
             ].addEffect(new Effect(randomEffect()));
         }
     }
