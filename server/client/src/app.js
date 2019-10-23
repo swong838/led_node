@@ -26,11 +26,11 @@ class App extends Component {
             pixelFalloff: initialDecay,
             effectDuration: initialEffectDuration,
             effectFalloff: initialEffectFalloff,
-            effectPropagateAfter: initialEffectSpillover
+            effectPropagateAfter: initialEffectSpillover,
+            maxWaitForUpdate: MAX_FRAMES_BETWEEN_UPDATES
         };
 
         this.framesUntilNextEffects = 1;
-
         this.pixels = [];
         for (let p = 0; p < pixels; p++) {
             this.pixels.push(new Pixel(p, this.state.pixelFalloff));
@@ -67,7 +67,7 @@ class App extends Component {
 
     refresh = () => {
         if (this.framesUntilNextEffects-- <= 0) {
-            this.framesUntilNextEffects = Math.ceil(Math.random() * MAX_FRAMES_BETWEEN_UPDATES);
+            this.framesUntilNextEffects = Math.ceil(Math.random() * this.state.maxWaitForUpdate);
             this.addEffects();
         }
 
@@ -118,6 +118,7 @@ class App extends Component {
                     <button onClick={this.addEffects}>add</button>
                     <button onClick={this.refresh}>step</button>
                     <button onClick={this.toggle}>{this.state.run ? 'stop' : 'start'}</button>
+                    <code>{this.framesUntilNextEffects}</code>
                 </section>
                 <section className="controls">
                     <label>
@@ -168,7 +169,21 @@ class App extends Component {
                         />
                         <code>{this.state.effectPropagateAfter}</code>
                     </label>
-                    <h5>{this.framesUntilNextEffects}</h5>
+                </section>
+                <section className="controls">
+                    <label>
+                        max frames to next effect burst
+                        <input
+                            type="range"
+                            min="1"
+                            max="6000"
+                            step="1"
+                            onChange={e => this.tune('maxWaitForUpdate', e)}
+                            value={this.state.maxWaitForUpdate}
+                        />
+                        <code>{this.state.maxWaitForUpdate}</code>
+                    </label>
+
                 </section>
             </React.Fragment>
         );
