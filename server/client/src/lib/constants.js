@@ -1,8 +1,8 @@
-export const debug = false;
+export const debug = true;
 export const tickrate = 3;
-export const width = debug ? 60 : 20;
-export const height = debug ? 60 : 60;
-export const pixels = debug ? 25 : 110;
+export const width = debug ? 60 : 15;
+export const height = debug ? 60 : 15;
+export const pixels = debug ? 25 : 144;
 
 
 export const initialDecay = 6

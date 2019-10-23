@@ -42,10 +42,8 @@ class Pixel {
         let delta = 0;
         this.effectQueue = this.effectQueue.flat();
 
-        for (let i = this.effectQueue.length; i >= 0; i--) {
+        for (let i = this.effectQueue.length - 1; i >= 0; i--) {
             const effect = this.effectQueue[i];
-            if (!effect) continue;
-
             const outcome = effect.apply(this._value);
 
             if (outcome.propagate) {
@@ -53,7 +51,7 @@ class Pixel {
             }
 
             if (outcome.expire) {
-                this.effectQueue.pop();
+                this.effectQueue.splice(i, 1);
             }
 
             delta += outcome.strength;
