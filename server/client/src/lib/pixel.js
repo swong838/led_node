@@ -4,12 +4,11 @@ class Pixel {
 
     RIGHT = 1;
     LEFT = -1;
-
-    FALLOFF = 3;
     MAX = 255 * 3;
 
-    constructor(index) {
+    constructor(index, falloff=8) {
         this.index = index;
+        this.falloff = falloff;
         this.effectQueue = [];
         this._value = 0;
         this.exports = {
@@ -43,26 +42,22 @@ class Pixel {
         let delta = 0;
         this.effectQueue = this.effectQueue.flat();
 
-        for (let i = this.effectQueue.length; i >= 0; i--) {
+        for (let i = this.effectQueue.length - 1; i >= 0; i--) {
             const effect = this.effectQueue[i];
-            if (!effect) continue;
-
             const outcome = effect.apply(this._value);
 
-            if (outcome.expire) {
-                this.effectQueue.pop();
-                continue;
+            if (outcome.propagate) {
+                this.propagate(outcome);
             }
 
-            if (outcome.propagate) {
-                this.effectQueue.pop();
-                this.propagate(outcome);
-                continue;
+            if (outcome.expire) {
+                this.effectQueue.splice(i, 1);
             }
+
             delta += outcome.strength;
         };
 
-        const newValue = (this._value + delta - this.FALLOFF);
+        const newValue = (this._value + delta - this.falloff);
         this._value = Math.min(Math.max(newValue, 0), this.MAX);
         return this._value;
     }
