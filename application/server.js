@@ -14,7 +14,6 @@ server.use('/', express.static('./application/client'))
 server.listen(port, () => {
     process.stdout.write(`Listening on port ${port}`);
 });
-  
 
 // (() => {
 //     process.stdout.write("\n");
