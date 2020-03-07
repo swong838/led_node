@@ -1,5 +1,5 @@
 import React from 'react';
-import {width, height, debug} from '../lib/constants';
+import {width, height, debug} from '%src/lib/constants';
 
 const PixelView = ({
     val,
