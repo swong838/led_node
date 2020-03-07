@@ -1,8 +1,8 @@
 var webpack = require('webpack');
 var path = require('path');
 
-var SRC_DIR = path.resolve(__dirname, './server/client/src');
-var BUILD_DIR = path.resolve(__dirname, './server/client/build/static');
+var SRC_DIR = path.resolve(__dirname, './src/frontend');
+var BUILD_DIR = path.resolve(__dirname, './application/client/build/static');
 
 module.exports = {
     mode: "development",
@@ -21,6 +21,10 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['*', '.js', '.jsx']
+        extensions: ['*', '.js', '.jsx'],
+        alias: {
+            '%src': path.resolve(__dirname, 'src/'),
+            '%frontend': path.resolve(__dirname, 'src/frontend/')
+        }
     },
 };

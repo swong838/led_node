@@ -1,3 +1,6 @@
+# frontend build
+/application/client/build/static/app.js
+
 # Logs
 logs
 *.log
