@@ -2,10 +2,6 @@ import Effect from './effect';
 
 class Pixel {
 
-    RIGHT = 1;
-    LEFT = -1;
-    MAX = 255 * 3;
-
     constructor(index, falloff=8) {
         this.index = index;
         this.falloff = falloff;
@@ -15,6 +11,11 @@ class Pixel {
             left: [],
             right: []
         };
+
+        this.RIGHT = 1;
+        this.LEFT = -1;
+        this.MAX = 255 * 3;
+
     }
 
     addEffect = effect => {this.effectQueue.push(effect);}
