@@ -28,7 +28,7 @@ const tick = () => new Promise(resolve => setTimeout(resolve, TICKRATE));
 
 
 while(index < ledStripLength) {
-
+    console.log('writing ', index);
     r = g = b = 0;
 
     let redUp = async () => {
