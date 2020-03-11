@@ -1,5 +1,6 @@
 import express from 'express';
-import diagnostics from '../src/lib/diagnostics';
+//import diagnostics from '../src/lib/diagnostics';
+import animation from '../src/lib/ledstrip';
 
 const port = process.env.PORT || 5000;
 const server = express();
@@ -9,4 +10,5 @@ server.listen(port, () => {
 });
 
 // display test output in stdout
-diagnostics(1);
+//diagnostics(1);
+animation();
