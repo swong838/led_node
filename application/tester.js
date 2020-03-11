@@ -12,7 +12,7 @@ ledStrip.off();
 ledStrip.sync();
 
 const MAX = 255;
-const TICKRATE = 1;
+const TICKRATE = .1;
 
 let r = 0;
 let g = 0;
@@ -75,7 +75,7 @@ const tick = () => {
             .then(blueUp)
             .then(fade)
             .then(() => {
-                ledStrip.off();
+                set(index, 0, 0, 0);
             });
     }
 })();
