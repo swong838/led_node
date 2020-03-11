@@ -64,6 +64,8 @@ const tick = () => {
                 set(index, r--, g--, b--);
                 await tick();
             }
+            ledStrip.off();
+            ledStrip.sync();
             return Promise.resolve();
         }
     
@@ -73,6 +75,6 @@ const tick = () => {
             .then(fade)
             .then(() => {
                 ledStrip.off();
-            })
+            });
     }
 })();
