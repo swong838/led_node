@@ -8,8 +8,10 @@ const ledStrip = new dotstar.Dotstar(spi, {
     length: ledStripLength
 });
 
+ledStrip.off();
+
 const MAX = 255;
-const TICKRATE = 2;
+const TICKRATE = 1;
 
 let r = 0;
 let g = 0;
@@ -58,7 +60,7 @@ const tick = () => {
         };
     
         let fade = async () => {
-            while (r + g + b > 0) {
+            for (let i = 0; i <= MAX; i++) {
                 set(index, r--, g--, b--);
                 await tick();
             }
