@@ -1,4 +1,4 @@
-import * as dotstar from './dotstar';
+import * as dotstar from 'dotstar';
 const SPI = require('pi-spi');
 
 const spi = SPI.initialize('/dev/spidev0.0');
