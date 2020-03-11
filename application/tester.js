@@ -24,32 +24,49 @@ const set = (index, r, g, b) => {
     ledStrip.sync();
 }
 
+const tick = () => new Promise(resolve => setTimeout(resolve, TICKRATE)); 
+
+
 while(index < ledStripLength) {
 
     r = g = b = 0;
 
-    let redUp = setInterval(() => {
-        set(index, r++, g, b--);
-        if (r >= MAX) {
-            clearInterval(redUp);
+    let redUp = async () => {
+        while (r <= MAX) {
+            set(index, r++, g, b);
+            await tick();
         }
-    }, TICKRATE)
+        return new Promise.resolve()
+    }
 
-    let greenUp = setInterval(() => {
-        set(index, r--, g++, b);
-        ledStrip.sync();
-        if (r >= MAX) {
-            clearInterval(greenUp);
+    let greenUp = async () => {
+        while (g <= MAX) {
+            set(index, r--, g++, b);
+            await tick();
         }
-    }, TICKRATE);
+        return new Promise.resolve()
+    }
 
-    let blueUp = setInterval(() => {
-        set(index, r, g--, b++);
-        ledStrip.sync();
-        if (r >= MAX) {
-            clearInterval(blueUp);
+    let blueUp = async () => {
+        while (b <= MAX) {
+            set(index, r, g--, b++);
+            await tick();
         }
-    }, TICKRATE)
+        return new Promise.resolve()
+    };
+
+    let fade = async () => {
+        while (r + g + b > 0) {
+            set(index, r--, g--, b--);
+            await tick();
+        }
+        return new Promise.resolve();
+    }
+
+    redUp()
+        .then(() => greenUp())
+        .then(() => blueUp())
+        .then(() => fade());
 
     index++;
 
