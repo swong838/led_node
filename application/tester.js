@@ -15,8 +15,6 @@ let r = 0;
 let g = 0;
 let b = 0;
 
-let index = 0;
-
 const clamp = v => Math.max(Math.min(v, MAX), 0)
 
 const set = (index, r, g, b) => {
@@ -29,7 +27,7 @@ const tick = () => {
 }
 
 (async () => {
-    for (let pixelIndex = 0; pixelIndex <= ledStripLength; pixelIndex++) {
+    for (let index = 0; index <= ledStripLength; index++) {
         console.log('writing ', index);
         r = g = b = 0;
         let redUp = async () => {
