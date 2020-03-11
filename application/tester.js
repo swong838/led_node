@@ -9,6 +9,7 @@ const ledStrip = new dotstar.Dotstar(spi, {
 });
 
 ledStrip.off();
+ledStrip.sync();
 
 const MAX = 255;
 const TICKRATE = 1;
