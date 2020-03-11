@@ -37,6 +37,9 @@ const randomEffect = () => {
     });
 }
 
+const clamp = v => Math.max(Math.min(v, MAX), 0);
+const setLED = (index, r, g, b) => ledStrip.set(index, clamp(r), clamp(g), clamp(b));
+
 const animation = () => {
 
     //process.stdout.write("\n");
@@ -64,9 +67,7 @@ const animation = () => {
                 return [r, g, b];
             }
         );
-        outputArray.forEach(([r, g, b], index) => {
-            ledStrip.set(index, r, g, b, .8);
-        })
+        outputArray.forEach(([r, g, b], index) => setLED(index, r, g, b));
         ledStrip.sync();
     }
     
