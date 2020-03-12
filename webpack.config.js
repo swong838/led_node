@@ -6,10 +6,14 @@ var BUILD_DIR = path.resolve(__dirname, './application/client/build/static');
 
 module.exports = {
     mode: "development",
-    entry: SRC_DIR + '/app.js',
+    entry: {
+        cells: SRC_DIR + '/cells.js',
+        wave: SRC_DIR + '/wave.js'
+    },
+    
     output: {
         path: BUILD_DIR,
-        filename: 'app.js'
+        filename: '[name].js'
     },
     module: {
         rules: [
