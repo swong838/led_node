@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import Pixel from '%src/lib/pixel';
-import Effect from '%src/lib/effect';
+import Wave from '%src/lib/wave';
 import {
     pixels,
     tickrate,
@@ -22,64 +22,68 @@ class App extends Component {
         super(props);
         this.state = {
             run: false,
-            pixelViews: [],
-
+            pixelViews: []
         };
-
+        this.effectQueue = [];
         this.framesUntilNextEffects = 1;
-        this.pixels = [];
 
         setInterval(() => {
             this.state.run && this.refresh();
         }, tickrate);
     }
 
-    randomEffect = () => {
-        return {
-            strength: Math.ceil(Math.random() * 255 * 2) + 255,
-            direction: 0,
-            decay: this.state.effectFalloff,
-            duration: this.state.effectDuration,
-            propagateAfter: this.state.effectPropagateAfter
-        };
-    }
-
+    componentDidMount = () => this.refresh()
+    randomEffect = () => new Wave({
+        origin: Math.ceil(Math.random() * pixels),
+        r: Math.ceil(Math.random() * 255),
+        g: Math.ceil(Math.random() * 255),
+        b: Math.ceil(Math.random() * 255),
+    })
 
     addEffects = () => {
         let numEffects = Math.ceil(Math.random() * 4);
         while(numEffects--) {
-            this.pixels[
-                Math.floor(Math.random() * pixels)
-            ].addEffect(new Effect(this.randomEffect()));
+            this.effectQueue.push(randomEffect());
         }
     }
     reset = () => {this.pixels.forEach(pixel => pixel.reset()); this.refresh();}
     poke = index => this.pixels[index].addEffect(new Effect({...this.randomEffect(), strength: POKESTRENGTH}))
-    componentDidMount = () => this.refresh()
     toggle = () => this.setState({run: !this.state.run})
 
     refresh = () => {
-        if (this.framesUntilNextEffects-- <= 0) {
-            this.framesUntilNextEffects = Math.ceil(Math.random() * this.state.maxWaitForUpdate);
-            this.addEffects();
+        // if (this.framesUntilNextEffects-- <= 0) {
+        //     this.framesUntilNextEffects = Math.ceil(Math.random() * this.state.maxWaitForUpdate);
+        //     this.addEffects();
+        // }
+
+        // pixel by pixel, get the sum of all running effects
+        let lightValues = [];
+        let pixelsToSet = (pixels - 1);
+        while(pixelsToSet--) {
+            lightValues.push(
+                this.effectQueue.reduce(
+                    (derivedLighting, effect) => {
+                        const {r, g, b} = effect.poll(pixelIndex);
+                        derivedLighting[r] += r;
+                        derivedLighting[g] += g;
+                        derivedLighting[b] += b;
+                    }, {r: 0, g: 0, b: 0}
+                )
+            );
         }
 
         this.setState({
-            pixelViews: this.pixels.map(
-                (pixel, index) => {
-
-                    const settings = {
-                        val: pixel.getValue(),
-                    }
-
-                    return (<PixelView
-                        key={index}
-                        callback={() => this.poke(index)}
-                        {...settings}
-                    />)
-                }
-            )
+            // write output array
+            pixelViews: lightValues.map(
+                (lighting, index) => <PixelView key={`pixel-${index}`} {...lighting} />
+            ),
+            // remove expired effects
+            effectQueue: this.effectQueue.filter(effect => effect.alive)
         });
+
+        // propagate each effect that remains
+        this.effectQueue.forEach(effect => effect.propagate());
+
     }
 
     tune = (setting, e) => {

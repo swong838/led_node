@@ -20,7 +20,7 @@ class Wave {
             propagate() - Move the wave along
     */
 
-    constructor = ({
+    constructor({
         origin,
         r = 0,
         g = 0,
@@ -28,7 +28,7 @@ class Wave {
         powerFalloff = 0,
         velocity = 1,
         velocityFalloff = 0,
-    }) => {
+    }) {
         this.origin = origin;
         this.r = r % 255;
         this.g = g % 255;
@@ -55,15 +55,15 @@ class Wave {
          */
 
         // right edge power multiplier
-        const highPower = 1 / (position - this.origin + this.distance) ** 2;
+        const rightEdgePower = 1 / (position - this.origin + this.distance) ** 2;
 
         // left edge power multiplier
-        const lowPower = 1 / (position - this.origin - this.distance) ** 2;
+        const leftEdgePower = 1 / (position - this.origin - this.distance) ** 2;
 
         return {
-            r: (this.r * this.highPower) + (this.r * this.lowPower),
-            g: (this.g * this.highPower) + (this.g * this.lowPower),
-            b: (this.b * this.highPower) + (this.b * this.lowPower),
+            r: (this.r * this.rightEdgePower) + (this.r * this.leftEdgePower),
+            g: (this.g * this.rightEdgePower) + (this.g * this.leftEdgePower),
+            b: (this.b * this.rightEdgePower) + (this.b * this.leftEdgePower),
         }
     }
 
