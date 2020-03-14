@@ -1,4 +1,4 @@
-const MAX_LIFE = 300;
+const MAX_LIFE = 2000;
 
 class Wave {
 
@@ -40,9 +40,12 @@ class Wave {
         this.alive = true;
         this.duration = 0;
         this.distance = 0;
+
+        this.poll = this.poll.bind(this);
+        this.propagate = this.propagate.bind(this);
     }
 
-    poll = (position) => {
+    poll(position) {
         /**
          * Check the wave's effect on a given position.
          * 
@@ -55,35 +58,44 @@ class Wave {
          */
 
         // right edge power multiplier
-        const rightEdgePower = 1 / (position - this.origin + this.distance) ** 2;
+        const rightEdgePower = 1 / Math.pow(Math.abs(position - this.origin + this.distance), 1.05);
 
         // left edge power multiplier
-        const leftEdgePower = 1 / (position - this.origin - this.distance) ** 2;
+        const leftEdgePower = 1 / Math.pow(Math.abs(position - this.origin - this.distance), 1.05);
 
-        return {
-            r: (this.r * this.rightEdgePower) + (this.r * this.leftEdgePower),
-            g: (this.g * this.rightEdgePower) + (this.g * this.leftEdgePower),
-            b: (this.b * this.rightEdgePower) + (this.b * this.leftEdgePower),
+        const lighting = {
+            r: (this.r * rightEdgePower) + (this.r * leftEdgePower),
+            g: (this.g * rightEdgePower) + (this.g * leftEdgePower),
+            b: (this.b * rightEdgePower) + (this.b * leftEdgePower),
         }
+        
+        return lighting;
+
     }
 
-    propagate = () => {
+    propagate() {
         /**
          * Move the wave along.
          */
         this.distance += this.velocity;
         this.velocity -= this.velocityFalloff;
 
-        this.r -= powerFalloff;
-        this.g -= powerFalloff;
-        this.b -= powerFalloff;
+        this.r -= this.powerFalloff;
+        this.g -= this.powerFalloff;
+        this.b -= this.powerFalloff;
 
         this.duration++;
 
-        if (
-            this.duration > MAX_LIFE ||
-            (this.r + this.g + this.b <= 0)
-        ) {
+        if (this.duration > MAX_LIFE) {
+            console.log('aged out')
+            this.alive = false;
+        }
+        else if (this.velocity <= 0) {
+            console.log('stopped');
+            this.alive = false;
+        }
+        else if (this.r + this.g + this.b <= 0) {
+            console.log('dimmed out')
             this.alive = false;
         }
     }
