@@ -1,6 +1,6 @@
 import express from 'express';
-//import diagnostics from '../src/lib/diagnostics';
-import animation from '../src/lib/ledstrip';
+import diagnostics from '../src/lib/diagnostics';
+import led_cells from '../src/lib/led_cells';
 
 const port = process.env.PORT || 5000;
 const server = express();
@@ -11,6 +11,18 @@ server.listen(port, () => {
     process.stdout.write(`Listening on port ${port}`);
 });
 
-// display test output in stdout
-//diagnostics(1);
-animation();
+
+const mode = 'waver';
+
+switch (mode){
+    case 'led_cells':
+        led_cells();
+        break;
+    case 'waver':
+        break;
+    
+    default:
+        // output to stdout
+        diagnostics(1);
+}
+

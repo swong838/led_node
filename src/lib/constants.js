@@ -9,3 +9,5 @@ export const initialDecay = 6
 export const initialEffectFalloff = 85;
 export const initialEffectDuration = 3;
 export const initialEffectSpillover = 1;
+
+export const MAX = 255;
