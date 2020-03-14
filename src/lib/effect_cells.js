@@ -41,11 +41,11 @@ const randomEffect = () => {
 }
 
 
-const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b));
+const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b), .8);
 
 const led_cells = () => {
+    console.log('initiating cell effect');
 
-    //process.stdout.write("\n");
     let pixelArray = [];
     for (let p = 0; p < ledStripLength; p++){
         pixelArray.push(new Pixel(p));
@@ -87,6 +87,7 @@ const led_cells = () => {
         }
         count++;
         cursor += 10;
+        console.log('tick');
     }, TICKRATE);
 
 }

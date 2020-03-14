@@ -24,7 +24,7 @@ ledStrip.off();
 ledStrip.sync();
 
 
-const TICKRATE = 1;
+const TICKRATE = 10;
 
 const randomWave = () => {
     return new Wave({
@@ -39,9 +39,10 @@ const randomWave = () => {
 }
 
 
-const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b));
+const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b), .8);
 
 const led_waves = () => {
+    console.log('initiating wave effect');
 
     let waves = [];
 
@@ -74,10 +75,10 @@ const led_waves = () => {
     setInterval(() => {
         advance();
         render();
-        if (Math.random() * 1002 > 1000) {
+        if (Math.random() * 1002 > 900) {
             waves.push(randomWave());
         }
-
+        console.log('tick');
     }, TICKRATE);
 
 }
