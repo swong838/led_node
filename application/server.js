@@ -1,6 +1,10 @@
 import express from 'express';
 import diagnostics from '../src/lib/diagnostics';
-import led_cells from '../src/lib/led_cells';
+// import led_cells from '../src/lib/led_cells';
+// import led_waves from '../src/lib/wave_cells';
+
+import { clamp } from '../src/lib/utilities';
+
 
 const port = process.env.PORT || 5000;
 const server = express();

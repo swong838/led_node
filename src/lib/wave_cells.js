@@ -9,10 +9,8 @@ import SPI from 'pi-spi';
 // effects
 import Wave from './wave';
 
-import MAX from './constants';
-
 import {
-    clamp,
+    lid,
     randInt,
 } from './utilities';
 
@@ -41,7 +39,7 @@ const randomWave = () => {
 }
 
 
-const setLED = (index, r, g, b) => ledStrip.set(index, clamp(r), clamp(g), clamp(b));
+const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b));
 
 const led_waves = () => {
 

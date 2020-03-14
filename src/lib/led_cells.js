@@ -16,9 +16,7 @@ import {
     MAX
 } from './constants';
 
-import {
-    clamp
-} from './utilities';
+import { lid } from './utilities';
 
 const spi = SPI.initialize('/dev/spidev0.0');
 const ledStripLength = 121;
@@ -43,7 +41,7 @@ const randomEffect = () => {
 }
 
 
-const setLED = (index, r, g, b) => ledStrip.set(index, clamp(r), clamp(g), clamp(b));
+const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b));
 
 const led_cells = () => {
 
