@@ -1,4 +1,5 @@
-const MAX_LIFE = 2000;
+const MAX_LIFE = 1000;
+const LIGHT_FALLOFF = 2.2;
 
 class Wave {
 
@@ -10,6 +11,9 @@ class Wave {
         constructor({
             origin (int): center of wave effect
             r, g, b (int): red, green, blue
+
+            distanceCutoff (int): max distance from each wave edge that can be affected
+
             powerFalloff (float): r/g/b falloff per tick
             velocity (float): speed of wavefront
             velocityFalloff (float): velocity drop per tick
@@ -25,20 +29,28 @@ class Wave {
         r = 0,
         g = 0,
         b = 0,
+        distanceCutoff = 6,
         powerFalloff = 0,
         velocity = 1,
         velocityFalloff = 0,
     }) {
         this.origin = origin;
+
+        this.rightEdge = origin;
+        this.leftEdge = origin;
+
         this.r = r % 255;
         this.g = g % 255;
         this.b = b % 255;
+
+        this.distanceCutoff = Math.ceil(distanceCutoff);
+
         this.powerFalloff = powerFalloff;
         this.velocity = velocity;
         this.velocityFalloff = velocityFalloff;
 
         this.alive = true;
-        this.duration = 0;
+        this.age = 0;
         this.distance = 0;
 
         this.poll = this.poll.bind(this);
@@ -58,10 +70,10 @@ class Wave {
          */
 
         // right edge power multiplier
-        const rightEdgePower = 1 / Math.pow(Math.abs(position - this.origin + this.distance), 1.05);
+        const rightEdgePower = 1 / Math.pow(Math.abs(position - this.origin + this.distance), LIGHT_FALLOFF);
 
         // left edge power multiplier
-        const leftEdgePower = 1 / Math.pow(Math.abs(position - this.origin - this.distance), 1.05);
+        const leftEdgePower = 1 / Math.pow(Math.abs(position - this.origin - this.distance), LIGHT_FALLOFF);
 
         const lighting = {
             r: (this.r * rightEdgePower) + (this.r * leftEdgePower),
@@ -78,24 +90,24 @@ class Wave {
          * Move the wave along.
          */
         this.distance += this.velocity;
-        this.velocity -= this.velocityFalloff;
+
+        this.rightEdge = this.origin + this.distance;
+        this.leftEdge = this.origin - this.distance;
+
+        this.velocity = Math.max(this.velocity - this.velocityFalloff, .01);
 
         this.r -= this.powerFalloff;
         this.g -= this.powerFalloff;
         this.b -= this.powerFalloff;
 
-        this.duration++;
+        this.age++;
 
-        if (this.duration > MAX_LIFE) {
-            //console.log('aged out')
-            this.alive = false;
-        }
-        else if (this.velocity <= 0) {
-            //console.log('stopped');
+        if (this.age > MAX_LIFE) {
+            console.log(this.origin, ' aged out')
             this.alive = false;
         }
         else if (this.r + this.g + this.b <= 0) {
-            //console.log('dimmed out')
+            console.log(this.origin, ' dimmed out')
             this.alive = false;
         }
     }

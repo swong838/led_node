@@ -5,7 +5,8 @@
   "scripts": {
     "client": "./node_modules/.bin/webpack --watch",
     "server": "nodemon --exec ./node_modules/.bin/babel-node application/server.js --ignore client",
-    "develop": "reset && ./node_modules/.bin/concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "develop": "reset && ./node_modules/.bin/concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "diagnostics": "./node_modules/.bin/babel-node ./src/lib/test_lights.js"
   },
   "dependencies": {
     "@babel/cli": "^7.6.0",
