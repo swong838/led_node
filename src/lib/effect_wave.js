@@ -24,7 +24,7 @@ ledStrip.off();
 ledStrip.sync();
 
 
-const TICKRATE = 10;
+const TICKRATE = 100;
 
 const randomWave = () => {
     return new Wave({
@@ -47,44 +47,48 @@ const setLED = (index, r, g, b) => {
 const led_waves = () => {
     console.log('initiating wave effect');
 
-    // let waves = [];
+    let waves = [];
 
-    // const advance = () => {
-    //     // propagate each effect that remains
-    //     waves.forEach(wave => wave.propagate());
-    //     // remove expired waves
-    //     waves = waves.filter(wave => wave.alive)
-    // };
+    const advance = () => {
+        // propagate each effect that remains
+        waves.forEach(wave => wave.propagate());
+        // remove expired waves
+        waves = waves.filter(wave => wave.alive)
+    };
 
-    // const render = () => {
-    //     let pixelToSet = (ledStripLength - 1);
-    //     while(pixelToSet--) {
-    //         let redSum = 0;
-    //         let blueSum = 0;
-    //         let greenSum = 0;
-    //         waves.forEach((wave) => {
-    //             const {r, g, b} = wave.poll(pixelToSet);
-    //             redSum += r;
-    //             greenSum += g;
-    //             blueSum += b;
-    //         });   
-    //         setLED(pixelToSet, redSum, greenSum, blueSum);
-    //     }
-    //     ledStrip.sync();
-    // }
+    const render = () => {
+        let pixelToSet = (ledStripLength - 1);
+        while(pixelToSet--) {
+            let redSum = 0;
+            let blueSum = 0;
+            let greenSum = 0;
+            waves.forEach((wave) => {
+                const {r, g, b} = wave.poll(pixelToSet);
+                redSum += r;
+                greenSum += g;
+                blueSum += b;
+            });   
+            setLED(pixelToSet, redSum, greenSum, blueSum);
+        }
+    }
+
+    waves.push(randomWave());
+    waves.push(randomWave());
+    waves.push(randomWave());
+    waves.push(randomWave());
+    waves.push(randomWave());
+    waves.push(randomWave());
 
 
-    // // effect generator
-    // setInterval(() => {
-    //     advance();
-    //     render();
-    //     if (Math.random() * 1002 > 900) {
-    //         waves.push(randomWave());
-    //     }
-    //     console.log('tick');
-    // }, TICKRATE);
-    ledStrip.all(150, 150, 150, 0.8);
-    ledStrip.sync();
+    // effect generator
+    setInterval(() => {
+        advance();
+        render();
+        if (Math.random() * 1002 > 900) {
+            waves.push(randomWave());
+        }
+        ledStrip.sync();
+    }, TICKRATE);
 }
 
 export default led_waves;
