@@ -14,7 +14,7 @@ import led_waves from '../src/lib/effect_wave';
 // });
 
 
-const mode = 1;
+const mode = 2;
 
 switch (mode){
     case 1:
