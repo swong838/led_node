@@ -1,3 +1,7 @@
+/**
+ * visual effect handled like a cellular automata
+ */
+
 class Effect {
     constructor({
         strength,

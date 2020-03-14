@@ -1,5 +1,5 @@
 # frontend build
-/application/client/build/static/app.js
+/application/client/build/static/*
 
 # Logs
 logs
