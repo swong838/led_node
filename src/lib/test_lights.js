@@ -18,7 +18,7 @@ const on = () => {
 }
 
 const off = () => {
-    ledStrip.off();
+    ledStrip.all(0, 0, 0, 0.8);
     ledStrip.sync();
 }
 
