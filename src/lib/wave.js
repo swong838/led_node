@@ -87,15 +87,15 @@ class Wave {
         this.duration++;
 
         if (this.duration > MAX_LIFE) {
-            console.log('aged out')
+            //console.log('aged out')
             this.alive = false;
         }
         else if (this.velocity <= 0) {
-            console.log('stopped');
+            //console.log('stopped');
             this.alive = false;
         }
         else if (this.r + this.g + this.b <= 0) {
-            console.log('dimmed out')
+            //console.log('dimmed out')
             this.alive = false;
         }
     }

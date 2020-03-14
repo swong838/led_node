@@ -12,8 +12,13 @@ import Effect from './effect';
 import {
     initialEffectFalloff,
     initialEffectDuration,
-    initialEffectSpillover
+    initialEffectSpillover,
+    MAX
 } from './constants';
+
+import {
+    clamp
+} from './utilities';
 
 const spi = SPI.initialize('/dev/spidev0.0');
 const ledStripLength = 121;
@@ -24,7 +29,7 @@ const ledStrip = new dotstar.Dotstar(spi, {
 ledStrip.off();
 ledStrip.sync();
 
-const MAX = 255;
+
 const TICKRATE = 20;
 
 const randomEffect = () => {
@@ -37,10 +42,10 @@ const randomEffect = () => {
     });
 }
 
-const clamp = v => Math.max(Math.min(v, MAX), 0);
+
 const setLED = (index, r, g, b) => ledStrip.set(index, clamp(r), clamp(g), clamp(b));
 
-const animation = () => {
+const led_cells = () => {
 
     //process.stdout.write("\n");
     let pixelArray = [];
@@ -74,6 +79,7 @@ const animation = () => {
     let count = 0;
     let cursor = 0;
 
+    // effect generator
     setInterval(() => {
         draw();
         if (count > 50) {count = 0;}
@@ -87,4 +93,4 @@ const animation = () => {
 
 }
 
-export default animation;
+export default led_cells;
