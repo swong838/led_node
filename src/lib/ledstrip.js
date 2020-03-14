@@ -25,7 +25,7 @@ ledStrip.off();
 ledStrip.sync();
 
 const MAX = 255;
-const TICKRATE = 20;
+const TICKRATE = 2;
 
 const randomEffect = () => {
     return new Effect({
@@ -38,7 +38,7 @@ const randomEffect = () => {
 }
 
 const clamp = v => Math.max(Math.min(v, MAX), 0);
-const setLED = (index, r, g, b) => ledStrip.set(index, clamp(r), clamp(g), clamp(b));
+const setLED = (index, r, g, b) => ledStrip.set(index, clamp(r), clamp(g), clamp(b), .4);
 
 const animation = () => {
 
@@ -59,11 +59,11 @@ const animation = () => {
                 pixel.clearExports();
 
                 let val = pixel.getValue();
-                const b = Math.max(val - MAX, 0);
+                const r = Math.max(val - MAX, 0);
                 val -= MAX;
-                const r = Math.max(val - 120, 0);
+                const g = Math.max(val - 120, 0);
                 val -= 120;
-                const g = Math.max(val - 60, 0);
+                const b = Math.max(val - 60, 0);
                 return [r, g, b];
             }
         );
