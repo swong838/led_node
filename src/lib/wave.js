@@ -94,7 +94,7 @@ class Wave {
         this.rightEdge = this.origin + this.distance;
         this.leftEdge = this.origin - this.distance;
 
-        this.velocity -= this.velocityFalloff;
+        this.velocity = Math.max(this.velocity - this.velocityFalloff, .01);
 
         this.r -= this.powerFalloff;
         this.g -= this.powerFalloff;
@@ -104,10 +104,6 @@ class Wave {
 
         if (this.age > MAX_LIFE) {
             console.log(this.origin, ' aged out')
-            this.alive = false;
-        }
-        else if (this.velocity <= 0) {
-            console.log(this.origin, ' stopped');
             this.alive = false;
         }
         else if (this.r + this.g + this.b <= 0) {
