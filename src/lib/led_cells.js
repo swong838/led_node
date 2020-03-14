@@ -64,11 +64,11 @@ const led_cells = () => {
                 pixel.clearExports();
 
                 let val = pixel.getValue();
-                const b = Math.max(val - MAX, 0);
+                const r = Math.max(val - MAX, 0);
                 val -= MAX;
-                const r = Math.max(val - 120, 0);
+                const g = Math.max(val - 120, 0);
                 val -= 120;
-                const g = Math.max(val - 60, 0);
+                const b = Math.max(val - 60, 0);
                 return [r, g, b];
             }
         );
