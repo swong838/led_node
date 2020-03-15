@@ -1,5 +1,6 @@
-const MAX_LIFE = 1000;
+const MAX_LIFE = 1500;
 const LIGHT_FALLOFF = 2.2;
+const CULL_AT = 15;
 
 class Wave {
 
@@ -29,7 +30,7 @@ class Wave {
         r = 0,
         g = 0,
         b = 0,
-        distanceCutoff = 6,
+        distanceCutoff = CULL_AT,
         powerFalloff = 0,
         velocity = 1,
         velocityFalloff = 0,
@@ -103,11 +104,11 @@ class Wave {
         this.age++;
 
         if (this.age > MAX_LIFE) {
-            console.log(this.origin, ' aged out')
+            //console.log(this.origin, ' aged out')
             this.alive = false;
         }
         else if (this.r + this.g + this.b <= 0) {
-            console.log(this.origin, ' dimmed out')
+            //console.log(this.origin, ' dimmed out')
             this.alive = false;
         }
     }

@@ -1,13 +1,22 @@
 import { MAX } from './constants';
 
+/**
+ * clamp() Clamp value v so it's between b and t, inclusive.
+ * @param {number} b bottom - minimum value
+ * @param {number} v value - value to clamp
+ * @param {number} t top - maximum value
+ */
 export const clamp = (b, v, t) => Math.max(Math.min(v, t), b);
-export const lid = v => Math.max(Math.min(v, MAX), 0);
+
+/**
+ * randInt() return a random integer between 0 and v, exclusive
+ * @param {number} v 
+ */
 export const randInt = v => Math.floor(Math.random() * v);
 
-// // (return value within leftbottom->lefttop && rightbottom->righttop)
-// export const inRange = (v, leftB, leftT, rightB, rightT) => (
-//     v >= leftB &&
-//     v <= leftT &&
-//     v >= rightB &&
-//     v <= rightT
-// );
+/**
+ * lid() Clamp value v so it's between 0 and MAX, inclusive
+ * @param {number} v 
+ */
+export const lid = v => Math.max(Math.min(v, MAX), 0);
+

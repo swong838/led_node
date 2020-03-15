@@ -1,7 +1,7 @@
 import express from 'express';
 import diagnostics from '../src/lib/diagnostics';
-import led_cells from '../src/lib/effect_cells';
-import led_waves from '../src/lib/effect_wave';
+import led_cells from '../src/lib/renderer_cells';
+import led_waves from '../src/lib/renderer_wave';
 
 
 const port = process.env.PORT || 5000;

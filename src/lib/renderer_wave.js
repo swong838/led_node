@@ -3,27 +3,41 @@
 */
 
 // hardware
-import * as dotstar from 'dotstar';
-import SPI from 'pi-spi';
+import LEDStrip from './led_strip';
+
+// performance
+import { PerformanceObserver, performance } from 'perf_hooks';
+import * as readline from 'readline';
 
 // effects
 import Wave from './wave';
 
 import {
-    lid,
     randInt
 } from './utilities';
 
-const spi = SPI.initialize('/dev/spidev0.0');
-const ledStripLength = 122;
-const ledStrip = new dotstar.Dotstar(spi, {
-    length: ledStripLength
+let renderTimer = [];
+
+const obs = new PerformanceObserver((items) => {
+    renderTimer.push(items.getEntries()[0].duration);
+    performance.clearMarks();
+
+    // every 1000 frames, print average frame draw time
+    if (renderTimer.length >= 1000) {
+        const average = renderTimer.reduce(
+            (accumulator, time) => {return accumulator += time;},
+            0
+        ) / renderTimer.length;
+        readline.clearLine(process.stdout, 0);
+        readline.cursorTo(process.stdout, 0, null);
+        process.stdout.write(`average frame render => ${average.toFixed(2)} ms`);
+        renderTimer = [];
+    }
 });
 
-ledStrip.all(0, 0, 0, .8);
-ledStrip.sync();
-
 const TICKRATE = 2;
+const ledStripLength = 122;
+const ledStrip = new LEDStrip(ledStripLength)
 
 const randomWave = () => {
     return new Wave({
@@ -36,19 +50,6 @@ const randomWave = () => {
         powerFalloff: (Math.random() * .25),
     });
 }
-
-const setLED = (index, r, g, b) => {
-    let redOut = lid(r);
-    let greenOut = lid(g);
-    let blueOut = lid(b);
-
-    if (r + g + b < 3) {
-        r = g = b = 0;
-    }
-
-    ledStrip.set(index, redOut, greenOut, blueOut, .8);
-};
-
 
 const mask = (position, distance) => {
     /**
@@ -103,29 +104,32 @@ const led_waves = () => {
             }
         });
 
-        ledStrip.all(0, 0, 0, 0);
+        ledStrip.zero();
         for (const index in touched) {
             const {r, g, b} = touched[index];
-            setLED(index, r, g, b);
+            ledStrip.setLED(index, r, g, b);
         }
 
         ledStrip.sync();
     }
 
+
     //effect generator
+    
     setInterval(() => {
+        performance.mark('startrender');
         advance();
         if (waves.length) {
             render();
         }
-        else {
-            ledStrip.all(0, 0, 0, 0);
-            ledStrip.sync();
-        }
-        if (waves.length < 4 && Math.random() * 1002 > 998) {
+        if (waves.length < 4 && Math.random() * 1002 > 1000) {
             const newWave = randomWave();
             waves.push(newWave);
         }
+
+        performance.mark('endrender');
+        performance.measure('time in render', 'startrender', 'endrender');
+        obs.observe({ entryTypes: ['measure'] });
     }, TICKRATE);
 }
 
