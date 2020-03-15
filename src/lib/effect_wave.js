@@ -33,7 +33,7 @@ const randomWave = () => {
         b: randInt(125)+ 20,
         velocity: Math.random() * .05,
         velocityFalloff: Math.min(Math.random(), .0002),
-        powerFalloff: (Math.random() * .5),
+        powerFalloff: (Math.random() * .25),
     });
 }
 
@@ -42,7 +42,7 @@ const setLED = (index, r, g, b) => {
     let greenOut = lid(g);
     let blueOut = lid(b);
 
-    if (r + g + b < 2) {
+    if (r + g + b < 3) {
         r = g = b = 0;
     }
 
@@ -110,20 +110,6 @@ const led_waves = () => {
         }
 
         ledStrip.sync();
-
-        // for(let pixelToSet = 0; pixelToSet < ledStripLength; pixelToSet++) {
-        //     let redSum = 0;
-        //     let blueSum = 0;
-        //     let greenSum = 0;
-        //     waves.forEach((wave) => {
-        //         const {r, g, b} = wave.poll(pixelToSet);
-        //         redSum += r;
-        //         greenSum += g;
-        //         blueSum += b;
-        //     });
-        //     setLED(pixelToSet, redSum, greenSum, blueSum);
-        //     ledStrip.sync();
-        // }
     }
 
     //effect generator
@@ -138,7 +124,6 @@ const led_waves = () => {
         }
         if (waves.length < 4 && Math.random() * 1002 > 998) {
             const newWave = randomWave();
-            console.log('[][][] spawning wave at ', newWave.origin);
             waves.push(newWave);
         }
     }, TICKRATE);
