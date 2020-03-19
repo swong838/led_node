@@ -28,7 +28,9 @@ module.exports = {
         extensions: ['*', '.js', '.jsx'],
         alias: {
             '%src': path.resolve(__dirname, 'src/'),
-            '%frontend': path.resolve(__dirname, 'src/frontend/')
+            '%frontend': path.resolve(__dirname, 'src/frontend/'),
+            '%lib': path.resolve(__dirname, 'src/lib/'),
+            '%effects': path.resolve(__dirname, 'src/effects/')
         }
     },
 };
