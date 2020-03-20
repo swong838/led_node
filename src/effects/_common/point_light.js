@@ -1,16 +1,35 @@
 import { MAX, MAXDISTANCE, MAXAGE, } from '../../lib/constants';
 import { log } from '../../lib/utilities';
 
-const FADE = 2.2;  // temp, make this configurable [][][]
 
 class PointLight {
     /**
+     * A single point light source.
+     * Moves with each tick, via {position + velocity}
      * 
      * @param {object} - config object
      * {
-     * 
-     * 
-     * 
+     *  // Position and speed.
+        @param {number} position - initial position of this light
+        @param {integer} strip_length - length of the light strip
+        @param {number} r - initial Red value
+        @param {number} g - initial Green value
+        @param {number} b - initial Blue value
+        @param {number} velocity - initial velocity
+        @param {number} fade - light falloff with distance from this source. ~2.2 is a good value here...
+
+        // How this light will change over time.
+        // These may be numbers, or they may be functions.
+        // Functions will be bound to have access to `this`...
+        @param {number, function} r_falloff - change in r per tick
+        @param {number, function} g_falloff - change in g per tick
+        @param {number, function} b_falloff - change in b per tick
+        @param {number, function} velocity_falloff - change in velocity per tick
+
+        // Boundary conditions.
+        @param {integer} max_age - maximum age for this light in ticks
+        @param {integer} leftBoundary - lowest position this light may occupy
+        @param {integer} rightBoundary - highest position this light may occupy
      * }
      */
 
@@ -21,11 +40,13 @@ class PointLight {
         g = 0,
         b = 0,
         velocity = 0,
+        fade = 2.2,
 
         r_falloff = 1,
         g_falloff = 1,
         b_falloff = 1,
         velocity_falloff = 1,
+
         max_age = MAXAGE,
         leftBoundary = -MAXDISTANCE,
         rightBoundary = strip_length + MAXDISTANCE,
@@ -40,8 +61,9 @@ class PointLight {
         this.g = g;
         this.b = b;
         this.velocity = velocity;
+        this.fade = fade;
 
-        this.max_age = max_age;
+        this.max_age = max_age % MAXAGE;
 
         // Handle falloffs as either numbers or callbacks
         this._updateRed = () => this.r -= r_falloff;
@@ -69,7 +91,7 @@ class PointLight {
         this.age = 0;
         this.alive = true;
 
-        //log(`light at spawned at ${this.origin}, ${}`)
+        log(`Point light at spawned at ${this.origin}`)
     }
 
     range = () => {
@@ -87,10 +109,10 @@ class PointLight {
     }
 
     propagate = () => {
-        // move
+        // apply movement
         this.position += this.velocity;
 
-        // delta-V, delta-lux, etc.
+        // update power and speed
         this._updateRed();
         this._updateGreen();
         this._updateBlue();
@@ -127,16 +149,12 @@ class PointLight {
          * Returns:
          *    {r, g, b} 
          */
-
-        // log(`getting power for ${target_location}, ${this.position}`)
-
-        const power = 1 / Math.pow(Math.abs(target_location - this.position), FADE);
+        const power = 1 / Math.pow(Math.abs(target_location - this.position), this.fade);
         const illumination = {
             r: this.r * power,
             g: this.g * power,
             b: this.b * power,
         }
-        // log(`light ${this.origin} setting { ${illumination.r}, ${illumination.g}, ${illumination.b}`)
         return illumination;
     }
 }
