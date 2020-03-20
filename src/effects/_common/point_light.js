@@ -1,6 +1,8 @@
 import { MAX, MAXDISTANCE, MAXAGE, } from '../../lib/constants';
 import { log } from '../../lib/utilities';
 
+const FADE = 2.2;  // temp, make this configurable [][][]
+
 class PointLight {
     /**
      * 
@@ -42,10 +44,10 @@ class PointLight {
         this.max_age = max_age;
 
         // Handle falloffs as either numbers or callbacks
-        this._updateRed = () => this.r -= this.r_falloff;
-        this._updateGreen = () => this.g -= this.g_falloff;
-        this._updateBlue = () => this.b -= this.b_falloff;
-        this._updateVelocity = () => this.velocity -= this.velocity_falloff;
+        this._updateRed = () => this.r -= r_falloff;
+        this._updateGreen = () => this.g -= g_falloff;
+        this._updateBlue = () => this.b -= b_falloff;
+        this._updateVelocity = () => this.velocity -= velocity_falloff;
         if (typeof r_falloff === 'function') {
             this._updateRed = r_falloff.bind(this);
         }
@@ -66,6 +68,8 @@ class PointLight {
         // intrinsic properties
         this.age = 0;
         this.alive = true;
+
+        //log(`light at spawned at ${this.origin}, ${}`)
     }
 
     range = () => {
@@ -116,13 +120,24 @@ class PointLight {
 
     }
 
-    poll = (at_pixel) => {
+    poll = (target_location) => {
         /**
-         * Return the RGB effect this light source would have on position (at)
-         * @param {int} at_pixel - the index of the pixel
+         * Return the RGB effect this light source would have at target_location
+         * @param {int} target_location
          * Returns:
          *    {r, g, b} 
          */
+
+        // log(`getting power for ${target_location}, ${this.position}`)
+
+        const power = 1 / Math.pow(Math.abs(target_location - this.position), FADE);
+        const illumination = {
+            r: this.r * power,
+            g: this.g * power,
+            b: this.b * power,
+        }
+        // log(`light ${this.origin} setting { ${illumination.r}, ${illumination.g}, ${illumination.b}`)
+        return illumination;
     }
 }
 

@@ -1,11 +1,10 @@
 // generic renderer
 import LEDStrip from '../../lib/led_strip';
 
-const ledStripLength = 122;
-
 class Renderer{
     constructor(renderMethod) {
-        this.ledStrip = new LEDStrip(ledStripLength)
+        this.length = 122
+        this.ledStrip = new LEDStrip(this.length);
         this.effects = [];
         this.render = renderMethod ? renderMethod.bind(this) : () => {};
     }
@@ -17,7 +16,7 @@ class Renderer{
         });
     }
 
-    tick = () => {        
+    tick = () => {
         this.advance();
         this.render();
     }

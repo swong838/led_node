@@ -6,17 +6,7 @@ const TICKRATE = 2;
 
 const test_point_light = () => {
 
-    const randomEffect = () => {
-        return new PointLight({
-            r: randInt(125)+ 20,
-            g: randInt(125)+ 20,
-            b: randInt(125)+ 20,
-            velocity: Math.random() * .05,
-            velocityFalloff: Math.min(Math.random(), .0002),
-        });
-    }
-
-    const renderer = new Renderer(() => {
+    const renderer = new Renderer(function(){
         let touched = {};
         this.effects.forEach(effect => {
             const [lower, upper] = effect.range();
@@ -40,7 +30,24 @@ const test_point_light = () => {
         this.ledStrip.sync();
     });
 
-    setInterval(renderer.tick, TICKRATE);
+    const randomEffect = () => {
+        return new PointLight({
+            position: 0,
+            strip_length: renderer.length,
+            r: randInt(125)+ 20,
+            r_falloff: .1,
+            g: randInt(125)+ 20,
+            g_falloff: .1,
+            b: randInt(125)+ 20,
+            b_falloff: .1,
+            velocity: Math.random() * .1,
+            velocity_falloff: 0,
+        });
+    }
+
+    setInterval(() => {
+        renderer.tick();
+    }, TICKRATE);
     setInterval(() => {
         if (renderer.effects.length < 6) {
             renderer.effects.push(randomEffect())

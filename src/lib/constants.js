@@ -1,4 +1,4 @@
-export const debug = false;
+export const debug = true;
 export const tickrate = 1;
 export const width = debug ? 60 : 15;
 export const height = debug ? 60 : 15;
