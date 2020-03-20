@@ -20,17 +20,18 @@ class PointLight {
         b = 0,
         velocity = 0,
 
-        r_falloff = 0,
-        g_falloff = 0,
-        b_falloff = 0,
-        velocity_falloff = 0,
+        r_falloff = 1,
+        g_falloff = 1,
+        b_falloff = 1,
+        velocity_falloff = 1,
         max_age = MAXAGE,
         leftBoundary = -MAXDISTANCE,
         rightBoundary = strip_length + MAXDISTANCE,
 
     }){
-        this.origin = position;
-        this.position = position;
+        this.position = position % strip_length;
+        this.origin = this.position;
+        this.position = this.origin;
         this.strip_length = strip_length;
 
         this.r = r;
