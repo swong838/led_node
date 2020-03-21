@@ -34,14 +34,15 @@ const test_point_light = () => {
         return new PointLight({
             position: 0,
             strip_length: renderer.length,
-            r: randInt(125)+ 20,
+            r: 125,
             r_falloff: .1,
-            g: randInt(125)+ 20,
+            g: 125,
             g_falloff: .1,
-            b: randInt(125)+ 20,
+            b: 125,
             b_falloff: .1,
-            velocity: Math.random() * .1,
+            velocity: .03,
             velocity_falloff: 0,
+            respawns: 4,
         });
     }
 
@@ -49,7 +50,7 @@ const test_point_light = () => {
         renderer.tick();
     }, TICKRATE);
     setInterval(() => {
-        if (renderer.effects.length < 6) {
+        if (renderer.effects.length < 60) {
             renderer.effects.push(randomEffect())
         }
     }, 1000)

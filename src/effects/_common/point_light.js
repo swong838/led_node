@@ -1,4 +1,4 @@
-import { MAX, MAXDISTANCE, MAXAGE, } from '../../lib/constants';
+import { MAX, MAXDISTANCE, MAXAGE, MAX_GENERATIONS } from '../../lib/constants';
 import { log } from '../../lib/utilities';
 
 
@@ -30,6 +30,7 @@ class PointLight {
         @param {integer} max_age - maximum age for this light in ticks
         @param {integer} leftBoundary - lowest position this light may occupy
         @param {integer} rightBoundary - highest position this light may occupy
+        @param {integer} respawns - # of new effects this effect may spawn
      * }
      */
 
@@ -47,9 +48,10 @@ class PointLight {
         b_falloff = 1,
         velocity_falloff = 1,
 
-        max_age = MAXAGE,
+        max_age = MAXAGE - 1,
         leftBoundary = -MAXDISTANCE,
         rightBoundary = strip_length + MAXDISTANCE,
+        respawns = MAX_GENERATIONS - 1
 
     }){
         this.position = position % strip_length;
@@ -57,13 +59,18 @@ class PointLight {
         this.position = this.origin;
         this.strip_length = strip_length;
 
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.velocity = velocity;
-        this.fade = fade;
+        this.r = this.initial_r = r;
+        this.g = this.initial_g = g;
+        this.b = this.initial_b = b;
+        this.velocity = this.initial_velocity = velocity;
+        this.fade = this.initial_fade = fade;
 
         this.max_age = max_age % MAXAGE;
+        this.respawns = respawns % MAX_GENERATIONS
+
+        // Precalculate the furthest left and right this source can travel
+        this.leftBoundary = Math.max(leftBoundary, -MAXDISTANCE);
+        this.rightBoundary = Math.min(rightBoundary, this.strip_length + MAXDISTANCE);
 
         // Handle falloffs as either numbers or callbacks
         this._updateRed = () => this.r -= r_falloff;
@@ -83,15 +90,14 @@ class PointLight {
             this._updateVelocity = velocity_falloff.bind(this);
         }
 
-        // Precalculate the furthest left and right this source can travel
-        this.leftBoundary = Math.max(leftBoundary, -MAXDISTANCE);
-        this.rightBoundary = Math.min(rightBoundary, this.strip_length + MAXDISTANCE);
-
         // intrinsic properties
         this.age = 0;
         this.alive = true;
 
-        log(`Point light at spawned at ${this.origin}`)
+        // push new effects into this array during propagation, for the renderer to pick up
+        this.spawns = [];
+
+        //log(`Point light spawned at origin=${this.origin} respawns=${this.respawns} rgb=${this.r}, ${this.g}, ${this.b}`)
     }
 
     range = () => {
@@ -140,6 +146,26 @@ class PointLight {
             log(`PointLight from ${this.origin} ${obit} at ${this.position}`);
         }
 
+        if (this.age % 800 === 0) {
+            if (this.respawns-- >= 0) {
+                // [][][] handle as a callback
+                this.spawns.push(
+                    new PointLight({
+                        position: this.position,
+                        strip_length: this.strip_length,
+                        r: this.initial_r * .6,
+                        r_falloff: .1,
+                        g: this.initial_g * .6,
+                        g_falloff: .1,
+                        b: this.initial_b * .2,
+                        b_falloff: .1,
+                        velocity: this.initial_velocity * -0.3,
+                        velocity_falloff: 0,
+                        respawns: 0,
+                    })
+                );
+            }
+        }
     }
 
     poll = (target_location) => {
