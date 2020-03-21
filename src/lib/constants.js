@@ -12,3 +12,5 @@ export const initialEffectSpillover = 1;
 export const MAX = 200;  // max power for a light source
 export const MAXDISTANCE = 12;  // max rendering distance from a light source
 export const MAXAGE = 4000;  // maximum age of an entity, in ticks
+
+export const MAX_GENERATIONS = 10;  // maximum # of generations for a respawning effect
