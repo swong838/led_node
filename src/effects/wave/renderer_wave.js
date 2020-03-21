@@ -3,7 +3,7 @@
 */
 
 // hardware
-import LEDStrip from './led_strip';
+import LEDStrip from '../../lib/led_strip';
 
 // performance
 import { PerformanceObserver, performance } from 'perf_hooks';
@@ -14,7 +14,7 @@ import Wave from './wave';
 
 import {
     randInt
-} from './utilities';
+} from '../../lib/utilities';
 
 let renderTimer = [];
 

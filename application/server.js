@@ -1,8 +1,8 @@
 import express from 'express';
 import diagnostics from '../src/lib/diagnostics';
-import led_cells from '../src/lib/renderer_cells';
-import led_waves from '../src/lib/renderer_wave';
-
+import led_cells from '../src/effects/cell/renderer_cells';
+import led_waves from '../src/effects/wave/renderer_wave';
+import test_point_light from '../src/effects/_common/test_point_light';
 
 const port = process.env.PORT || 5000;
 const server = express();
@@ -14,7 +14,7 @@ server.listen(port, () => {
 });
 
 
-const mode = 2;
+const mode = 3;
 
 switch (mode){
     case 1:
@@ -22,6 +22,9 @@ switch (mode){
         break;
     case 2:
         led_waves();
+        break;
+    case 3:
+        test_point_light();
         break;
     
     default:

@@ -14,9 +14,9 @@ import {
     initialEffectDuration,
     initialEffectSpillover,
     MAX
-} from './constants';
+} from '../../lib/constants';
 
-import { lid } from './utilities';
+import { lid } from '../../lib/utilities';
 
 const spi = SPI.initialize('/dev/spidev0.0');
 const ledStripLength = 121;

@@ -1,4 +1,4 @@
-import { MAX } from './constants';
+import { debug, MAX } from './constants';
 
 /**
  * clamp() Clamp value v so it's between b and t, inclusive.
@@ -19,4 +19,11 @@ export const randInt = v => Math.floor(Math.random() * v);
  * @param {number} v 
  */
 export const lid = v => Math.max(Math.min(v, MAX), 0);
+
+/**
+ * log() Conditionally log if the debug flag is set
+ * @param {string} s
+ */
+export const log = s => debug ? console.log(s) : null;
+
 

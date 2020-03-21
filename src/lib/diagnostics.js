@@ -5,8 +5,8 @@
 
 import chalk from 'chalk';
 import * as readline from 'readline';
-import Pixel from './pixel';
-import Effect from './effect';
+import Pixel from '../effects/cell/pixel';
+import Effect from '../effects/cell/effect';
 import {
     initialEffectFalloff,
     initialEffectDuration,

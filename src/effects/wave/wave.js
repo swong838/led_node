@@ -107,7 +107,7 @@ class Wave {
             //console.log(this.origin, ' aged out')
             this.alive = false;
         }
-        else if (this.r + this.g + this.b <= 0) {
+        else if (this.r + this.g + this.b <= 3) {
             //console.log(this.origin, ' dimmed out')
             this.alive = false;
         }
