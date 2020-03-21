@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import Pixel from '%src/lib/pixel';
-import Effect from '%src/lib/effect';
+import Pixel from '%effects/cell/pixel';
+import Effect from '%effects/cell/effect';
 import {
     pixels,
     tickrate,
@@ -10,7 +10,7 @@ import {
     initialEffectFalloff,
     initialEffectDuration,
     initialEffectSpillover
-} from '%src/lib/constants';
+} from '%lib/constants';
 
 import PixelView from './components/pixel';
 

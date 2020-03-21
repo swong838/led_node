@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import Pixel from '%src/lib/pixel';
-import Wave from '%src/lib/wave';
+// import Pixel from '%src/lib/pixel';
+import Wave from '%effects/wave/wave';
 import {
     pixels,
     tickrate,
@@ -10,7 +10,7 @@ import {
     initialEffectFalloff,
     initialEffectDuration,
     initialEffectSpillover
-} from '%src/lib/constants';
+} from '%lib/constants';
 
 import SimplePixelView from './components/simplePixel';
 
@@ -111,72 +111,3 @@ class App extends Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
-
-
-/*
-                <section className="controls">
-                    <label>
-                        pixel decay
-                        <input
-                            type="range"
-                            min="0"
-                            max="50"
-                            step="1"
-                            onChange={e => this.tune('pixelFalloff', e)}
-                            value={this.state.pixelFalloff}
-                        />
-                        <code>{this.state.pixelFalloff}</code>
-                    </label>
-                    <label>
-                        effect falloff per step
-                        <input
-                            type="range"
-                            min="0"
-                            max="100"
-                            step="5"
-                            onChange={e => this.tune('effectFalloff', e)}
-                            value={this.state.effectFalloff}
-                        />
-                        <code>{this.state.effectFalloff}</code>
-                    </label>
-                    <label>
-                        effect duration
-                        <input
-                            type="range"
-                            min="0"
-                            max="30"
-                            step="1"
-                            onChange={e => this.tune('effectDuration', e)}
-                            value={this.state.effectDuration}
-                        />
-                        <code>{this.state.effectDuration}</code>
-                    </label>
-                    <label>
-                        effect spillover after
-                        <input
-                            type="range"
-                            min="0"
-                            max="30"
-                            step="1"
-                            onChange={e => this.tune('effectPropagateAfter', e)}
-                            value={this.state.effectPropagateAfter}
-                        />
-                        <code>{this.state.effectPropagateAfter}</code>
-                    </label>
-                </section>
-                <section className="controls">
-                    <label>
-                        max frames to next effect burst
-                        <input
-                            type="range"
-                            min="1"
-                            max="6000"
-                            step="1"
-                            onChange={e => this.tune('maxWaitForUpdate', e)}
-                            value={this.state.maxWaitForUpdate}
-                        />
-                        <code>{this.state.maxWaitForUpdate}</code>
-                    </label>
-                </section>
-
- */
