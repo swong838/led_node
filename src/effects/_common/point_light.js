@@ -146,26 +146,26 @@ class PointLight {
             log(`PointLight from ${this.origin} ${obit} at ${this.position}`);
         }
 
-        if (this.age % 800 === 0) {
-            if (this.respawns-- >= 0) {
-                // [][][] handle as a callback
-                this.spawns.push(
-                    new PointLight({
-                        position: this.position,
-                        strip_length: this.strip_length,
-                        r: this.initial_r * .6,
-                        r_falloff: .1,
-                        g: this.initial_g * .6,
-                        g_falloff: .1,
-                        b: this.initial_b * .2,
-                        b_falloff: .1,
-                        velocity: this.initial_velocity * -0.3,
-                        velocity_falloff: 0,
-                        respawns: 0,
-                    })
-                );
-            }
-        }
+        // if (this.age % 800 === 0) {
+        //     if (this.respawns-- >= 0) {
+        //         // [][][] handle as a callback
+        //         this.spawns.push(
+        //             new PointLight({
+        //                 position: this.position,
+        //                 strip_length: this.strip_length,
+        //                 r: this.initial_r * .6,
+        //                 r_falloff: .1,
+        //                 g: this.initial_g * .6,
+        //                 g_falloff: .1,
+        //                 b: this.initial_b * .2,
+        //                 b_falloff: .1,
+        //                 velocity: this.initial_velocity * -0.3,
+        //                 velocity_falloff: 0,
+        //                 respawns: 0,
+        //             })
+        //         );
+        //     }
+        // }
     }
 
     poll = (target_location) => {

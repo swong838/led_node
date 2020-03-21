@@ -29,25 +29,16 @@ const effectBuffer = function(){
 
 server.post('/lab/', async (req, response) => {
     console.log(`pushing light`);
-    effectBuffer.add({
-        position: 0,
-        strip_length: 122,
-        r: 125,
-        r_falloff: .1,
-        g: 125,
-        g_falloff: .1,
-        b: 125,
-        b_falloff: .1,
-        velocity: .03,
-        velocity_falloff: 0,
-        respawns: 4,
-    })
+    effectBuffer.add(req.body)
     response.json('ok');
 });
 
 const mode = 3;
 
 switch (mode){
+    case 0:
+        break;
+
     case 1:
         led_cells();
         break;
@@ -57,7 +48,8 @@ switch (mode){
     case 3:
         test_point_light(effectBuffer);
         break;
-    
+
+
     default:
         // output to stdout
         diagnostics(1);

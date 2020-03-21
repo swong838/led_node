@@ -29,27 +29,14 @@ const test_point_light = (effectBuffer) => {
         this.ledStrip.sync();
     });
 
-    // const randomEffect = () => {
-    //     return new PointLight({
-    //         position: 0,
-    //         strip_length: renderer.length,
-    //         r: 125,
-    //         r_falloff: .1,
-    //         g: 125,
-    //         g_falloff: .1,
-    //         b: 125,
-    //         b_falloff: .1,
-    //         velocity: .03,
-    //         velocity_falloff: 0,
-    //         respawns: 4,
-    //     });
-    // }
-
+    setInterval(() => renderer.tick(), TICKRATE);
     setInterval(() => {
-        const newEffects = effectBuffer.get().map(settings => new PointLight({...settings}));
-        renderer.effects.push([...newEffects]);
-        renderer.tick();
-    }, TICKRATE);
+        renderer.effects.push(
+            ...effectBuffer.get().map(
+                settings => new PointLight({...settings})
+            )
+        );
+    }, 100)
 }
 
 export default test_point_light;
