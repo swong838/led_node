@@ -97,7 +97,7 @@ class PointLight {
         // push new effects into this array during propagation, for the renderer to pick up
         this.spawns = [];
 
-        //log(`Point light spawned at origin=${this.origin} respawns=${this.respawns} rgb=${this.r}, ${this.g}, ${this.b}`)
+        log(`Point light spawned at origin=${this.origin} velocity=${this.velocity} respawns=${this.respawns} rgb=${this.r}, ${this.g}, ${this.b}`)
     }
 
     range = () => {

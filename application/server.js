@@ -28,8 +28,7 @@ const effectBuffer = function(){
 }();
 
 server.post('/lab/', async (req, response) => {
-    console.log(`pushing light`);
-    effectBuffer.add(req.body)
+    effectBuffer.add({strip_length: 122, ...req.body});
     response.json('ok');
 });
 
