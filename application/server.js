@@ -14,7 +14,7 @@ server.listen(port, () => {
 });
 
 
-const mode = 3;
+const mode = 2;
 
 switch (mode){
     case 1:

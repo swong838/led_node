@@ -1,6 +1,5 @@
 import Renderer from './renderer';
 import PointLight from './point_light';
-import { randInt } from '../../lib/utilities';
 
 const TICKRATE = 2;
 
