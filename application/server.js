@@ -13,10 +13,39 @@ server.use('/cells', express.static('./application/client/cells.html'))
 server.use('/testbed', express.static('./application/client/testbed.html'))
 server.use('/wave', express.static('./application/client/wave.html'))
 
+
+const effectBuffer = function(){
+    let _buffer = [];
+    return {
+        add: item => _buffer.push(item),
+        append: items => _buffer.push([...items]),
+        get: () => {
+            const out = [..._buffer];
+            _buffer = [];
+            return out;
+        }
+    }
+}();
+
 server.post('/lab/', async (req, response) => {
-    console.log(`=== got ${JSON.stringify(req.body)}`);
+    console.log(`pushing light`);
+    effectBuffer.add({
+        position: 0,
+        strip_length: 122,
+        r: 125,
+        r_falloff: .1,
+        g: 125,
+        g_falloff: .1,
+        b: 125,
+        b_falloff: .1,
+        velocity: .03,
+        velocity_falloff: 0,
+        respawns: 4,
+    })
     response.json('ok');
 });
+
+const mode = 3;
 
 switch (mode){
     case 1:
@@ -26,7 +55,7 @@ switch (mode){
         led_waves();
         break;
     case 3:
-        test_point_light();
+        test_point_light(effectBuffer);
         break;
     
     default:

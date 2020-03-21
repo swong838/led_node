@@ -8,7 +8,7 @@
 
 
 const testbed = (cb) => {
-    setInterval(cb, 1000);
+    setInterval(cb, 4000);
 }
 
 export default testbed;
