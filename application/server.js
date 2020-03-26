@@ -5,13 +5,13 @@ import led_cells from '../src/effects/cell/renderer_cells';
 import led_waves from '../src/effects/wave/renderer_wave';
 import test_point_light from '../src/effects/_common/test_point_light';
 
-const port = process.env.PORT || 5000;
-const server = express();
-server.use(express.json())
-server.use('/', express.static('./application/client'))
-server.use('/cells', express.static('./application/client/cells.html'))
-server.use('/testbed', express.static('./application/client/testbed.html'))
-server.use('/wave', express.static('./application/client/wave.html'))
+// const port = process.env.PORT || 5000;
+// const server = express();
+// server.use(express.json())
+// server.use('/', express.static('./application/client'))
+// server.use('/cells', express.static('./application/client/cells.html'))
+// server.use('/testbed', express.static('./application/client/testbed.html'))
+// server.use('/wave', express.static('./application/client/wave.html'))
 
 
 const effectBuffer = function(){
@@ -27,12 +27,23 @@ const effectBuffer = function(){
     }
 }();
 
-server.post('/lab/', async (req, response) => {
-    effectBuffer.add({strip_length: 122, ...req.body});
-    response.json('ok');
-});
+// [][][] protect behind a debug flag
+// server.post('/lab/', async (req, response) => {
+//     let effectSettings = {strip_length: 122, ...req.body};
+//     for (let v in effectSettings) {
+//         let tempV = parseFloat(effectSettings[v]);
+//         if (isNaN(tempV)) {
+//             eval(`tempV = ${effectSettings[v]}`);  // yes, it's an eval
+//             effectSettings[v] = tempV;
+//         }
+//         effectSettings[v] = tempV;
+//     }
 
-const mode = 3;
+//     effectBuffer.add({strip_length: 122, ...req.body});
+//     response.json('ok');
+// });
+
+const mode = 2;
 
 switch (mode){
     case 0:
@@ -54,6 +65,6 @@ switch (mode){
         diagnostics(1);
 }
 
-server.listen(port, () => {
-    process.stdout.write(`Listening on port ${port}`);
-});
+// server.listen(port, () => {
+//     process.stdout.write(`Listening on port ${port}`);
+// });

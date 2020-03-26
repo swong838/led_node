@@ -20,12 +20,7 @@ import { lid } from '../../lib/utilities';
 
 const spi = SPI.initialize('/dev/spidev0.0');
 const ledStripLength = 121;
-const ledStrip = new dotstar.Dotstar(spi, {
-    length: ledStripLength
-});
 
-ledStrip.off();
-ledStrip.sync();
 
 
 const TICKRATE = 20;
@@ -41,10 +36,19 @@ const randomEffect = () => {
 }
 
 
-const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b), .8);
 
 const led_cells = () => {
-    console.log('initiating cell effect');
+    
+    const ledStrip = new dotstar.Dotstar(spi, {
+        length: ledStripLength
+    });
+    
+    ledStrip.off();
+    ledStrip.sync();
+
+    const setLED = (index, r, g, b) => ledStrip.set(index, lid(r), lid(g), lid(b), .8);
+
+
 
     let pixelArray = [];
     for (let p = 0; p < ledStripLength; p++){

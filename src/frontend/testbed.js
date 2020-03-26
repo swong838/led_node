@@ -48,10 +48,9 @@ class App extends Component {
 
     cb = e => {
         e.preventDefault();
-
         const {name, value} = e.currentTarget;
         const newState = {};
-        newState[name] = parseFloat(value);
+        newState[name] = value;
         this.setState(newState);
     }
 

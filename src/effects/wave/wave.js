@@ -1,3 +1,4 @@
+import { log } from '../../lib/utilities';
 const MAX_LIFE = 1500;
 const LIGHT_FALLOFF = 2.2;
 const CULL_AT = 15;
@@ -52,6 +53,8 @@ class Wave {
 
         this.alive = true;
         this.age = 0;
+        this.obit = '';
+        this.expirationTime = 0;
         this.distance = 0;
 
         this.poll = this.poll.bind(this);
@@ -86,6 +89,13 @@ class Wave {
 
     }
 
+    die(reason){
+        //log(`${this.origin} ${reason}`);
+        this.obit = reason;
+        this.expirationTime = new Date().getTime();
+        this.alive = false;
+    }
+
     propagate() {
         /**
          * Move the wave along.
@@ -95,7 +105,7 @@ class Wave {
         this.rightEdge = this.origin + this.distance;
         this.leftEdge = this.origin - this.distance;
 
-        this.velocity = Math.max(this.velocity - this.velocityFalloff, .01);
+        this.velocity = Math.max(this.velocity - this.velocityFalloff, 0);
 
         this.r -= this.powerFalloff;
         this.g -= this.powerFalloff;
@@ -104,12 +114,13 @@ class Wave {
         this.age++;
 
         if (this.age > MAX_LIFE) {
-            //console.log(this.origin, ' aged out')
-            this.alive = false;
+            this.die('aged out');
         }
-        else if (this.r + this.g + this.b <= 3) {
-            //console.log(this.origin, ' dimmed out')
-            this.alive = false;
+        // else if (this.velocity <= 0) {
+        //     this.die('halted')
+        // }
+        else if (this.r + this.g + this.b <= -100) {
+            this.die(`dimmed out with R=${this.r} G=${this.g} B=${this.b}`);
         }
     }
 }
