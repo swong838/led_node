@@ -1,7 +1,7 @@
 import Renderer from './renderer';
 import PointLight from './point_light';
 
-const TICKRATE = 2;
+import { TICKRATE } from '../../lib/constants';
 
 const test_point_light = (effectBuffer) => {
 

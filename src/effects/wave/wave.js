@@ -1,4 +1,6 @@
 import { log } from '../../lib/utilities';
+import { MAX } from '../../lib/constants';
+
 const MAX_LIFE = 1500;
 const LIGHT_FALLOFF = 2.2;
 const CULL_AT = 15;
@@ -41,9 +43,9 @@ class Wave {
         this.rightEdge = origin;
         this.leftEdge = origin;
 
-        this.r = r % 255;
-        this.g = g % 255;
-        this.b = b % 255;
+        this.r = r % MAX;
+        this.g = g % MAX;
+        this.b = b % MAX;
 
         this.distanceCutoff = Math.ceil(distanceCutoff);
 
@@ -86,7 +88,6 @@ class Wave {
         }
         
         return lighting;
-
     }
 
     die(reason){
@@ -119,7 +120,7 @@ class Wave {
         // else if (this.velocity <= 0) {
         //     this.die('halted')
         // }
-        else if (this.r + this.g + this.b <= -100) {
+        else if (this.r < 0 && this.g < 0 && this.b < 0) {
             this.die(`dimmed out with R=${this.r} G=${this.g} B=${this.b}`);
         }
     }

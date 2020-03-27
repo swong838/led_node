@@ -44,13 +44,14 @@ const randomWave = () => {
         r: randInt(125)+ 20,
         g: randInt(125)+ 20,
         b: randInt(125)+ 20,
+        velocity: (Math.random() * .04),
         velocityFalloff: Math.min(Math.random(), .00002),
         powerFalloff: (Math.random() * .125),
         // origin: 40,
         // r: 125,
         // g: 125,
         // b: 125,
-        velocity: .02,
+        //velocity: .02,
         // velocityFalloff: .000002,
         // powerFalloff: .225
     });
@@ -140,14 +141,19 @@ const led_waves = () => {
         //performance.mark('endrender');
         //performance.measure('time in render', 'startrender', 'endrender');
         //obs.observe({ entryTypes: ['measure'] });
-    }, TICKRATE);
 
-    setInterval(() => {
-        if (waves.length < 4) {
+        if (waves.length < 8 && Math.random() * 1002 > 900) {
             const newWave = randomWave();
             waves.push(newWave);
         }
-    }, 1500);
+    }, TICKRATE);
+
+    // setInterval(() => {
+    //     if (waves.length < 4) {
+    //         const newWave = randomWave();
+    //         waves.push(newWave);
+    //     }
+    // }, 1500);
 
 }
 
