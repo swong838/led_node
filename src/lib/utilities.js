@@ -1,4 +1,6 @@
-import { debug, MAX } from './constants';
+import { debug, MAX, TICKRATE } from './constants';
+
+const ticksPerSecond = 1000 / TICKRATE;
 
 /**
  * clamp() Clamp value v so it's between b and t, inclusive.
@@ -26,4 +28,8 @@ export const lid = v => Math.max(Math.min(v, MAX), 0);
  */
 export const log = s => debug ? console.log(s) : null;
 
-
+/**
+ * perSecond() - Translate a number to its per-second equivalent
+ * @param {number} v 
+ */
+export const perSecond = v => v / ticksPerSecond;

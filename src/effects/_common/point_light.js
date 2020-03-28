@@ -1,4 +1,4 @@
-import { MAX, MAXDISTANCE, MAXAGE, MAX_GENERATIONS } from '../../lib/constants';
+import { MAX, MAXDISTANCE, MAXAGE, MAX_GENERATIONS, STRIP_LENGTH } from '../../lib/constants';
 import { log } from '../../lib/utilities';
 
 
@@ -11,7 +11,6 @@ class PointLight {
      * {
      *  // Position and speed.
         @param {number} position - initial position of this light
-        @param {integer} strip_length - length of the light strip
         @param {number} r - initial Red value
         @param {number} g - initial Green value
         @param {number} b - initial Blue value
@@ -36,7 +35,6 @@ class PointLight {
 
     constructor({
         position = 0,
-        strip_length = 0,
         r = 0,
         g = 0,
         b = 0,
@@ -50,14 +48,15 @@ class PointLight {
 
         max_age = MAXAGE - 1,
         leftBoundary = -MAXDISTANCE,
-        rightBoundary = strip_length + MAXDISTANCE,
+        rightBoundary = STRIP_LENGTH + MAXDISTANCE,
         respawns = MAX_GENERATIONS - 1
 
     }){
-        this.position = position % strip_length;
+        
+        this.position = position % STRIP_LENGTH;
+        log(`position ${position} ${this.position}`);
         this.origin = this.position;
         this.position = this.origin;
-        this.strip_length = strip_length;
 
         this.r = this.initial_r = r;
         this.g = this.initial_g = g;
@@ -91,6 +90,7 @@ class PointLight {
         }
 
         // intrinsic properties
+        this.strip_length = STRIP_LENGTH;
         this.age = 0;
         this.alive = true;
 

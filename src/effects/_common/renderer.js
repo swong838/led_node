@@ -1,5 +1,7 @@
 // generic renderer
+
 import LEDStrip from '../../lib/led_strip';
+import { log } from '../../lib/utilities';
 
 class Renderer{
     constructor(renderMethod) {
@@ -7,7 +9,6 @@ class Renderer{
         this.ledStrip = new LEDStrip(this.length);
         this.effects = [];
         this.render = renderMethod ? renderMethod.bind(this) : () => {};
-
         this.run = false;
     }
 
@@ -29,7 +30,9 @@ class Renderer{
             this.advance();
             this.render();
         }
-    }  
+    }
+    go = () => this.run = true;
+    stop = () => this.run = false; 
 }
 
 export default Renderer;

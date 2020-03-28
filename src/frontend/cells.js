@@ -5,7 +5,7 @@ import Pixel from '%effects/cell/pixel';
 import Effect from '%effects/cell/effect';
 import {
     pixels,
-    tickrate,
+    TICKRATE,
     initialDecay,
     initialEffectFalloff,
     initialEffectDuration,
