@@ -8,7 +8,8 @@ module.exports = {
     mode: "development",
     entry: {
         cells: SRC_DIR + '/cells.js',
-        wave: SRC_DIR + '/wave.js'
+        testbed: SRC_DIR + '/testbed.js',
+        wave: SRC_DIR + '/wave.js',
     },
     
     output: {

@@ -53,9 +53,9 @@ class LEDStrip {
          */
 
         // minimum brightness of 1 to deal with flickering issues
-        r = r >= 1 ? r : 0;
-        g = g >= 1 ? g : 0;
-        b = b >= 1 ? b : 0;
+        // r = r >= 1 ? r : 0;
+        // g = g >= 1 ? g : 0;
+        // b = b >= 1 ? b : 0;
 
         this.ledStrip.set(index, lid(r), lid(g), lid(b), .8);
         return this;

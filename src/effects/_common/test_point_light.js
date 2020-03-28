@@ -1,9 +1,9 @@
 import Renderer from './renderer';
 import PointLight from './point_light';
 
-const TICKRATE = 2;
+import { TICKRATE } from '../../lib/constants';
 
-const test_point_light = () => {
+const test_point_light = (effectBuffer) => {
 
     const renderer = new Renderer(function(){
         let touched = {};
@@ -29,31 +29,14 @@ const test_point_light = () => {
         this.ledStrip.sync();
     });
 
-    const randomEffect = () => {
-        return new PointLight({
-            position: 0,
-            strip_length: renderer.length,
-            r: 125,
-            r_falloff: .1,
-            g: 125,
-            g_falloff: .1,
-            b: 125,
-            b_falloff: .1,
-            velocity: .03,
-            velocity_falloff: 0,
-            respawns: 4,
-        });
-    }
-
+    setInterval(() => renderer.tick(), TICKRATE);
     setInterval(() => {
-        renderer.tick();
-    }, TICKRATE);
-    setInterval(() => {
-        if (renderer.effects.length < 60) {
-            renderer.effects.push(randomEffect())
-        }
-    }, 1000)
-
+        renderer.effects.push(
+            ...effectBuffer.get().map(
+                settings => new PointLight({...settings})
+            )
+        );
+    }, 100)
 }
 
 export default test_point_light;

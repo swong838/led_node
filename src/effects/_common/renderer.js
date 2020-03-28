@@ -7,6 +7,8 @@ class Renderer{
         this.ledStrip = new LEDStrip(this.length);
         this.effects = [];
         this.render = renderMethod ? renderMethod.bind(this) : () => {};
+
+        this.run = false;
     }
 
     advance = () => {
@@ -23,10 +25,11 @@ class Renderer{
     }
 
     tick = () => {
-        this.advance();
-        this.render();
-    }
-    
+        if (this.run) {
+            this.advance();
+            this.render();
+        }
+    }  
 }
 
 export default Renderer;

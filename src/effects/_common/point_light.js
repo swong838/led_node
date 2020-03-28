@@ -97,7 +97,7 @@ class PointLight {
         // push new effects into this array during propagation, for the renderer to pick up
         this.spawns = [];
 
-        //log(`Point light spawned at origin=${this.origin} respawns=${this.respawns} rgb=${this.r}, ${this.g}, ${this.b}`)
+        log(`Point light spawned at origin=${this.origin} velocity=${this.velocity} respawns=${this.respawns} rgb=${this.r}, ${this.g}, ${this.b}`)
     }
 
     range = () => {
@@ -146,26 +146,26 @@ class PointLight {
             log(`PointLight from ${this.origin} ${obit} at ${this.position}`);
         }
 
-        if (this.age % 800 === 0) {
-            if (this.respawns-- >= 0) {
-                // [][][] handle as a callback
-                this.spawns.push(
-                    new PointLight({
-                        position: this.position,
-                        strip_length: this.strip_length,
-                        r: this.initial_r * .6,
-                        r_falloff: .1,
-                        g: this.initial_g * .6,
-                        g_falloff: .1,
-                        b: this.initial_b * .2,
-                        b_falloff: .1,
-                        velocity: this.initial_velocity * -0.3,
-                        velocity_falloff: 0,
-                        respawns: 0,
-                    })
-                );
-            }
-        }
+        // if (this.age % 800 === 0) {
+        //     if (this.respawns-- >= 0) {
+        //         // [][][] handle as a callback
+        //         this.spawns.push(
+        //             new PointLight({
+        //                 position: this.position,
+        //                 strip_length: this.strip_length,
+        //                 r: this.initial_r * .6,
+        //                 r_falloff: .1,
+        //                 g: this.initial_g * .6,
+        //                 g_falloff: .1,
+        //                 b: this.initial_b * .2,
+        //                 b_falloff: .1,
+        //                 velocity: this.initial_velocity * -0.3,
+        //                 velocity_falloff: 0,
+        //                 respawns: 0,
+        //             })
+        //         );
+        //     }
+        // }
     }
 
     poll = (target_location) => {

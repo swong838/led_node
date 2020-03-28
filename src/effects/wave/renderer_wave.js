@@ -13,7 +13,7 @@ import * as readline from 'readline';
 import Wave from './wave';
 
 import {
-    randInt
+    randInt, log
 } from '../../lib/utilities';
 
 let renderTimer = [];
@@ -37,7 +37,6 @@ const obs = new PerformanceObserver((items) => {
 
 const TICKRATE = 2;
 const ledStripLength = 122;
-const ledStrip = new LEDStrip(ledStripLength)
 
 const randomWave = () => {
     return new Wave({
@@ -45,9 +44,16 @@ const randomWave = () => {
         r: randInt(125)+ 20,
         g: randInt(125)+ 20,
         b: randInt(125)+ 20,
-        velocity: Math.random() * .05,
-        velocityFalloff: Math.min(Math.random(), .0002),
-        powerFalloff: (Math.random() * .25),
+        velocity: (Math.random() * .04),
+        velocityFalloff: Math.min(Math.random(), .00002),
+        powerFalloff: (Math.random() * .125),
+        // origin: 40,
+        // r: 125,
+        // g: 125,
+        // b: 125,
+        //velocity: .02,
+        // velocityFalloff: .000002,
+        // powerFalloff: .225
     });
 }
 
@@ -67,10 +73,18 @@ const mask = (position, distance) => {
 
 const led_waves = () => {
 
+    const ledStrip = new LEDStrip(ledStripLength);
+
     let waves = [];
 
     const advance = () => {
-        waves = waves.filter(wave => wave.alive);
+        waves = waves.filter(wave => {
+            if (!wave.alive) {
+                const morgueTime = new Date().getTime() - wave.expirationTime;
+                log(`${wave.origin} died: ${wave.obit}, cleanup took ${morgueTime}ms`);
+            }
+            return wave.alive;
+        });
 
         // propagate each effect that remains
         waves.forEach(wave => wave.propagate());
@@ -117,20 +131,30 @@ const led_waves = () => {
     //effect generator
     
     setInterval(() => {
-        performance.mark('startrender');
+        //performance.mark('startrender');
         advance();
         if (waves.length) {
             render();
         }
-        if (waves.length < 4 && Math.random() * 1002 > 1000) {
+        
+
+        //performance.mark('endrender');
+        //performance.measure('time in render', 'startrender', 'endrender');
+        //obs.observe({ entryTypes: ['measure'] });
+
+        if (waves.length < 8 && Math.random() * 1002 > 900) {
             const newWave = randomWave();
             waves.push(newWave);
         }
-
-        performance.mark('endrender');
-        performance.measure('time in render', 'startrender', 'endrender');
-        obs.observe({ entryTypes: ['measure'] });
     }, TICKRATE);
+
+    // setInterval(() => {
+    //     if (waves.length < 4) {
+    //         const newWave = randomWave();
+    //         waves.push(newWave);
+    //     }
+    // }, 1500);
+
 }
 
 export default led_waves;
