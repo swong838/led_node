@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import Wave from '%effects/wave/wave';
 import {
     pixels,
-    tickrate,
+    TICKRATE,
     initialDecay,
     initialEffectFalloff,
     initialEffectDuration,

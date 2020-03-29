@@ -2,6 +2,7 @@ import Renderer from './renderer';
 import PointLight from './point_light';
 
 import { TICKRATE } from '../../lib/constants';
+import { log } from '../../lib/utilities';
 
 const test_point_light = (effectBuffer) => {
 
@@ -29,14 +30,17 @@ const test_point_light = (effectBuffer) => {
         this.ledStrip.sync();
     });
 
-    setInterval(() => renderer.tick(), TICKRATE);
+    setInterval(renderer.tick, TICKRATE);
     setInterval(() => {
         renderer.effects.push(
             ...effectBuffer.get().map(
-                settings => new PointLight({...settings})
+                settings => {
+                    return new PointLight({...settings});
+                }
             )
         );
-    }, 100)
+    }, 250);
+    return renderer;
 }
 
 export default test_point_light;

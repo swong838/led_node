@@ -1,4 +1,4 @@
-import { MAX, MAXDISTANCE, MAXAGE, MAX_GENERATIONS } from '../../lib/constants';
+import { MAX, MAXDISTANCE, MAXAGE, MAX_GENERATIONS, STRIP_LENGTH } from '../../lib/constants';
 import { log } from '../../lib/utilities';
 
 
@@ -11,7 +11,6 @@ class PointLight {
      * {
      *  // Position and speed.
         @param {number} position - initial position of this light
-        @param {integer} strip_length - length of the light strip
         @param {number} r - initial Red value
         @param {number} g - initial Green value
         @param {number} b - initial Blue value
@@ -26,6 +25,9 @@ class PointLight {
         @param {number, function} b_falloff - change in b per tick
         @param {number, function} velocity_falloff - change in velocity per tick
 
+        // Other interesting callbacks
+        @param {function} onDeath - what to do when this point light expires
+
         // Boundary conditions.
         @param {integer} max_age - maximum age for this light in ticks
         @param {integer} leftBoundary - lowest position this light may occupy
@@ -36,7 +38,6 @@ class PointLight {
 
     constructor({
         position = 0,
-        strip_length = 0,
         r = 0,
         g = 0,
         b = 0,
@@ -48,16 +49,18 @@ class PointLight {
         b_falloff = 1,
         velocity_falloff = 1,
 
+        onDeath = function(){},
+
         max_age = MAXAGE - 1,
         leftBoundary = -MAXDISTANCE,
-        rightBoundary = strip_length + MAXDISTANCE,
+        rightBoundary = STRIP_LENGTH + MAXDISTANCE,
         respawns = MAX_GENERATIONS - 1
 
     }){
-        this.position = position % strip_length;
+
+        this.position = position % STRIP_LENGTH;
         this.origin = this.position;
         this.position = this.origin;
-        this.strip_length = strip_length;
 
         this.r = this.initial_r = r;
         this.g = this.initial_g = g;
@@ -67,6 +70,8 @@ class PointLight {
 
         this.max_age = max_age % MAXAGE;
         this.respawns = respawns % MAX_GENERATIONS
+
+        this.onDeath = onDeath.bind(this);
 
         // Precalculate the furthest left and right this source can travel
         this.leftBoundary = Math.max(leftBoundary, -MAXDISTANCE);
@@ -91,6 +96,7 @@ class PointLight {
         }
 
         // intrinsic properties
+        this.strip_length = STRIP_LENGTH;
         this.age = 0;
         this.alive = true;
 
@@ -144,28 +150,10 @@ class PointLight {
 
         if (!this.alive) {
             log(`PointLight from ${this.origin} ${obit} at ${this.position}`);
+            if (this.respawns > 0) {
+                this.onDeath();
+            }
         }
-
-        // if (this.age % 800 === 0) {
-        //     if (this.respawns-- >= 0) {
-        //         // [][][] handle as a callback
-        //         this.spawns.push(
-        //             new PointLight({
-        //                 position: this.position,
-        //                 strip_length: this.strip_length,
-        //                 r: this.initial_r * .6,
-        //                 r_falloff: .1,
-        //                 g: this.initial_g * .6,
-        //                 g_falloff: .1,
-        //                 b: this.initial_b * .2,
-        //                 b_falloff: .1,
-        //                 velocity: this.initial_velocity * -0.3,
-        //                 velocity_falloff: 0,
-        //                 respawns: 0,
-        //             })
-        //         );
-        //     }
-        // }
     }
 
     poll = (target_location) => {
