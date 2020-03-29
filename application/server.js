@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { STRIP_LENGTH } from '../src/lib/constants';
+import { debug } from '../src/lib/constants';
 import { log } from '../src/lib/utilities'; 
 
 import diagnostics from '../src/lib/diagnostics';
@@ -30,22 +30,25 @@ const effectBuffer = function(){
     }
 }();
 
-//[][][] protect behind a debug flag
-server.post('/lab/', async (req, response) => {
-    let effectSettings = {...req.body};
-    
-    for (let v in effectSettings) {
-        let tempV = parseFloat(effectSettings[v]);
-        if (isNaN(tempV)) {
-            eval(`tempV = ${effectSettings[v]}`);  // yes, it's an eval
+if (debug) {
+    server.post('/lab/', async (req, response) => {
+        let effectSettings = {...req.body};
+        for (let v in effectSettings) {
+            var tempV = parseFloat(effectSettings[v]);
+            /**
+                Yes, this is an eval.
+                It's meant to let us develop algorithmic effects without needing to restart the node server.
+                Of course it's behind the `debug` flag.
+            */
+            if (isNaN(tempV)) {
+                eval(`tempV = ${effectSettings[v]}`);
+            }
             effectSettings[v] = tempV;
         }
-        effectSettings[v] = tempV;
-    }
-    log(`pushing ${JSON.stringify(effectSettings)}`);
-    effectBuffer.add(effectSettings);
-    response.json('ok');
-});
+        effectBuffer.add(effectSettings);
+        response.json('ok');
+    });
+}
 
 const mode = 3;
 

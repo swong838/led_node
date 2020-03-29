@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import { MAX, MAXDISTANCE, MAXAGE, MAX_GENERATIONS } from '%lib/constants';
+import { clamp } from '%lib/utilities';
+import { MAX, MAXDISTANCE, MAXAGE, MAX_GENERATIONS, STRIP_LENGTH } from '%lib/constants';
 
-const strip_length = 122;
+const numeric = /^\d+\.?\d*$/;
+const trailing = /\.\s*$/;
 
 const initialState = {
     position: 0,
@@ -20,7 +22,7 @@ const initialState = {
 
     max_age: MAXAGE - 1,
     leftBoundary: -MAXDISTANCE,
-    rightBoundary: strip_length + MAXDISTANCE,
+    rightBoundary: STRIP_LENGTH + MAXDISTANCE,
     respawns: 0
 }
 
@@ -29,19 +31,22 @@ class App extends Component {
         super(props);
         this.state = {...initialState};
         this.inputs = [
-            {name: 'position', type: 'range', min: 0, max: strip_length-1, step: 1},
+            {name: 'position', type: 'range', min: 0, max: STRIP_LENGTH-1, step: 1},
+
             {name: 'r', type: 'range', min: 0, max: 200, step: .1},
             {name: 'g', type: 'range', min: 0, max: 200, step: .1},
             {name: 'b', type: 'range', min: 0, max: 200, step: .1},
-            {name: 'velocity', type: 'range', min: -10, max: 10, step: .01},
-            {name: 'fade', type: 'range', min: 0, max: 8, step: .1},
             {name: 'r_falloff', type: 'range', min: 0, max: 3, step: .1},
             {name: 'g_falloff', type: 'range', min: 0, max: 3, step: .1},
             {name: 'b_falloff', type: 'range', min: 0, max: 3, step: .1},
+
+            {name: 'velocity', type: 'range', min: -10, max: 10, step: .1},
             {name: 'velocity_falloff', type: 'range', min: 0, max: 10, step: 1},
+
             {name: 'max_age', type: 'range', min: 0, max: MAXAGE - 1, step: 1},
             {name: 'leftBoundary', type: 'range', min: initialState.leftBoundary, max: MAXDISTANCE, step: 1},
             {name: 'rightBoundary', type: 'range', min: initialState.leftBoundary, max: MAXDISTANCE, step: 1},
+            {name: 'fade', type: 'range', min: 0, max: 8, step: .1},
             {name: 'respawns', type: 'range', min: 0, max: 4, step: 1}
         ];
     }
@@ -49,8 +54,14 @@ class App extends Component {
     cb = e => {
         e.preventDefault();
         const {name, value} = e.currentTarget;
-        const newState = {};
-        newState[name] = value;
+        let newState = {[name]: value};
+
+        // handle decimals
+        if (numeric.test(value) && !trailing.test(value)) {
+            const {min, max} = this.inputs.find(i => i.name === name);
+            newState[name] = clamp(value, min, max);
+        }
+
         this.setState(newState);
     }
 
@@ -60,13 +71,14 @@ class App extends Component {
         callback=this.cb,
         min=0,
         max,
-        step=1
+        step=1,
     }) => {
         return (
             <div key={`input-${key}`}>
                 <label>{name}: </label>
                 <input type='range' onChange={callback} value={this.state[name]} name={name} min={min} max={max} step={step} />
-                <code>{this.state[name]}</code> 
+                <input type='text' onChange={callback} value={this.state[name]} name={name} />
+                <code>{this.state[name]}</code>
             </div>
         );
     }
@@ -94,7 +106,7 @@ class App extends Component {
         return (
             <article>
                 <header>
-                    Strip length: {strip_length}
+                    Strip length: {STRIP_LENGTH}
                 </header>
                 <section><button onClick={this.send}>Send</button></section>
                 {this.getInputs()}

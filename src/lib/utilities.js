@@ -4,11 +4,11 @@ const ticksPerSecond = 1000 / TICKRATE;
 
 /**
  * clamp() Clamp value v so it's between b and t, inclusive.
- * @param {number} b bottom - minimum value
  * @param {number} v value - value to clamp
+ * @param {number} b bottom - minimum value
  * @param {number} t top - maximum value
  */
-export const clamp = (b, v, t) => Math.max(Math.min(v, t), b);
+export const clamp = (v, b, t) => Math.max(Math.min(v, t), b);
 
 /**
  * randInt() return a random integer between 0 and v, exclusive
