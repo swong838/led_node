@@ -13,7 +13,7 @@ export const initialEffectSpillover = 1;
 export const STRIP_LENGTH = 122;
 
 export const TICKRATE = 2;  // milliseconds per tick
-export const MAX = 100;  // max power for a light source
+export const MAX = 200;  // max power for a light source
 export const MAXDISTANCE = 12;  // max rendering distance from a light source
 export const MAXAGE = 4000;  // maximum age of an entity, in ticks
 

@@ -44,10 +44,10 @@ class PointLight {
         velocity = 0,
         fade = 2.2,
 
-        r_falloff = 1,
-        g_falloff = 1,
-        b_falloff = 1,
-        velocity_falloff = 1,
+        r_falloff = 0,
+        g_falloff = 0,
+        b_falloff = 0,
+        velocity_falloff = 0,
 
         onDeath = function(){},
 
@@ -75,7 +75,7 @@ class PointLight {
 
         // Precalculate the furthest left and right this source can travel
         this.leftBoundary = Math.max(leftBoundary, -MAXDISTANCE);
-        this.rightBoundary = Math.min(rightBoundary, this.strip_length + MAXDISTANCE);
+        this.rightBoundary = Math.min(rightBoundary, STRIP_LENGTH + MAXDISTANCE);
 
         // Handle falloffs as either numbers or callbacks
         this._updateRed = () => this.r -= r_falloff;
@@ -103,7 +103,15 @@ class PointLight {
         // push new effects into this array during propagation, for the renderer to pick up
         this.spawns = [];
 
-        log(`Point light spawned at origin=${this.origin} velocity=${this.velocity} respawns=${this.respawns} rgb=${this.r}, ${this.g}, ${this.b}`)
+        log(
+            `Point light spawned at
+            origin=${this.origin}
+            velocity=${this.velocity}
+            respawns=${this.respawns}
+            r${this.r} g${this.g} b${this.b}
+            left=${this.leftBoundary} right=${this.rightBoundary}`
+        )
+
     }
 
     range = () => {
@@ -148,11 +156,11 @@ class PointLight {
             this.alive = false;
         }
 
+        //log(`PointLight ${this.origin} r${this.r} g${this.g} b${this.b} age${this.age} alive${this.alive}`);
+
         if (!this.alive) {
-            log(`PointLight from ${this.origin} ${obit} at ${this.position}`);
-            if (this.respawns > 0) {
-                this.onDeath();
-            }
+            log(`PointLight from ${this.origin} ${obit} at ${this.position} -- r${this.r} g${this.g} b${this.b} age${this.age}`);
+            this.onDeath();
         }
     }
 

@@ -2,10 +2,11 @@
 
 import LEDStrip from '../../lib/led_strip';
 import { log } from '../../lib/utilities';
+import { STRIP_LENGTH } from '../../lib/constants';
 
 class Renderer{
     constructor(renderMethod) {
-        this.length = 122
+        this.length = STRIP_LENGTH;
         this.ledStrip = new LEDStrip(this.length);
         this.effects = [];
         this.render = renderMethod ? renderMethod.bind(this) : () => {};
