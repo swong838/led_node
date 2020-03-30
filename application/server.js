@@ -33,7 +33,7 @@ const effectBuffer = function(){
 }();
 
 
-const mode = 1;
+const mode = 3;
 
 switch (mode){
     case 1:

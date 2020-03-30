@@ -16,6 +16,13 @@ export const clamp = (v, b, t) => Math.max(Math.min(v, t), b);
  */
 export const randInt = v => Math.floor(Math.random() * v);
 
+
+export const randBetween = (b, t) => {
+    
+}
+
+
+
 /**
  * lid() Clamp value v so it's between 0 and MAX, inclusive
  * @param {number} v 

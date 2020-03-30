@@ -26,6 +26,7 @@ class PointLight {
         @param {number, function} velocity_falloff - change in velocity per tick
 
         // Other interesting callbacks
+        @param {function} onPropagate - checks to run every time this light propagates
         @param {function} onDeath - what to do when this point light expires
 
         // Boundary conditions.
@@ -49,6 +50,7 @@ class PointLight {
         b_falloff = 0,
         velocity_falloff = 0,
 
+        onPropagate = function(){},
         onDeath = function(){},
 
         max_age = MAXAGE - 1,
@@ -70,7 +72,7 @@ class PointLight {
 
         this.max_age = max_age % MAXAGE;
         this.respawns = respawns % MAX_GENERATIONS
-
+        this.onPropagate = onPropagate.bind(this);
         this.onDeath = onDeath.bind(this);
 
         // Precalculate the furthest left and right this source can travel
@@ -138,6 +140,9 @@ class PointLight {
         this._updateBlue();
         this._updateVelocity();
 
+        // apply propagate handler
+        this.onPropagate();
+
         // handle expiration
         this.age++;
         let obit = '';
@@ -156,10 +161,18 @@ class PointLight {
             this.alive = false;
         }
 
-        //log(`PointLight ${this.origin} r${this.r} g${this.g} b${this.b} age${this.age} alive${this.alive}`);
+        // log(`== PointLight ${this.origin} == r${this.r} g${this.g} b${this.b} age${this.age} v${this.velocity}`);
 
         if (!this.alive) {
-            log(`PointLight from ${this.origin} ${obit} at ${this.position} -- r${this.r} g${this.g} b${this.b} age${this.age}`);
+            log(
+                `PointLight from ${this.origin} ${obit}
+                p${this.position}
+                v${this.velocity}
+                r${this.r}
+                g${this.g}
+                b${this.b}
+                age${this.age}
+            `);
             this.onDeath();
         }
     }

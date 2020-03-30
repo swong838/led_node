@@ -31,28 +31,44 @@ const rain = (effectBuffer) => {
     });
 
     const raindrop = () => {
-        const drop = new PointLight({
-            //position: randInt(STRIP_LENGTH),
-            position: 60,
-            r_falloff: function(){this.r = this.b * .05},  
-            g_falloff: function(){this.g = this.b * .1},
-            b_falloff: function(){
-                this.b = this.age * .004;
-                if(this.b > 28){
-                    this.alive = false;
-                }
-            },
-            velocity: .00002,
-            velocity_falloff: function(){this.velocity *= 1.0005},
-            respawns: 0,
+        return new PointLight({
+            position: randInt(STRIP_LENGTH),
+            fade: 4,
+            b: .07,
+            r_falloff: function(){this.r = Math.max(this.b * .7 - .05, 0);},
+            g_falloff: function(){this.g = Math.max(this.b * .8 - .05, 0);},
+            b_falloff: function(){this.b = this.b * 1.005;},
+            velocity: .0005,
+            velocity_falloff: function(){this.velocity *= 1.0015;},
+            respawns: 1,
+            onPropagate: function(){if(this.b > 35){ this.alive = false; }},
             onDeath: function(){
-                log(`splash ${this.r} ${this.g} ${this.b} ${this.age} ${this.position} `)
+                //log(`splash ${this.r} ${this.g} ${this.b} ${this.age} ${this.position} `);
+                const ripple = {
+                    position: this.position,
+                    r: this.r * .33,
+                    g: this.g * .33,
+                    b: this.b * .33,
+                    r_falloff: .12,
+                    g_falloff: .12,
+                    b_falloff: .12,
+                    velocity_falloff: function(){this.velocity *= .99;},
+                    max_age: 600,
+                };
+                this.spawns.push(...[
+                    new PointLight({...ripple, velocity: -.1}),
+                    new PointLight({...ripple, velocity: .1,})
+                ]);
             },
         });
-        return drop;
     }
 
-    setInterval(renderer.tick, TICKRATE);
+    setInterval(() => {
+        renderer.tick();
+        if (renderer.run && renderer.effects.length < 20 && (Math.random() * 1002 > 995)) {
+            renderer.effects.push(raindrop());
+        }
+    }, TICKRATE);
 
     setInterval(() => {
         renderer.effects.push(
@@ -64,13 +80,39 @@ const rain = (effectBuffer) => {
         );
     }, 250);
 
-    setInterval(() => {
-        if (renderer.run && renderer.effects.length < 1) {
-            renderer.effects.push(raindrop())
-        }
-    }, 1000)
+    // setInterval(() => {
+    //     if (renderer.run && renderer.effects.length < 1) {
+    //         renderer.effects.push(raindrop())
+    //     }
+    // }, 1000)
 
     return renderer;
 }
 
 export default rain;
+
+
+/*
+
+tuning 
+
+r_falloff:
+function(){this.r = Math.max(this.b * .07 - .25, 0)}
+
+g_falloff:
+function(){this.g = Math.max(this.b * .12 - .25, 0)}
+
+b_falloff:
+function(){this.b = this.b * 1.005; if(this.b > 35){ this.alive = false; }}
+
+velocity:
+.0002
+
+velocity_falloff:
+function(){this.velocity *= 1.001}
+
+max_age:
+1870
+
+
+ */
