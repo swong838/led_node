@@ -52,8 +52,8 @@ const rain = (effectBuffer) => {
                     r_falloff: .12,
                     g_falloff: .12,
                     b_falloff: .12,
-                    velocity_falloff: function(){this.velocity *= .99;},
-                    max_age: 600,
+                    velocity_falloff: function(){this.velocity *= .955;},
+                    max_age: 1200,
                 };
                 this.spawns.push(...[
                     new PointLight({...ripple, velocity: -.1}),
@@ -65,7 +65,7 @@ const rain = (effectBuffer) => {
 
     setInterval(() => {
         renderer.tick();
-        if (renderer.run && renderer.effects.length < 20 && (Math.random() * 1002 > 995)) {
+        if (renderer.run && renderer.effects.length < 30 && (Math.random() * 1002 > 993)) {
             renderer.effects.push(raindrop());
         }
     }, TICKRATE);
