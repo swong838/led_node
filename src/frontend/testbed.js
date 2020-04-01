@@ -40,7 +40,7 @@ class App extends Component {
             {name: 'g_falloff', type: 'range', min: 0, max: 3, step: .1},
             {name: 'b_falloff', type: 'range', min: 0, max: 3, step: .1},
 
-            {name: 'velocity', type: 'range', min: -10, max: 10, step: .1},
+            {name: 'velocity', type: 'range', min: -2, max: 2, step: .01},
             {name: 'velocity_falloff', type: 'range', min: 0, max: 10, step: 1},
 
             {name: 'max_age', type: 'range', min: 0, max: MAXAGE - 1, step: 1},
