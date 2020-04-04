@@ -5,7 +5,6 @@
 import * as dotstar from 'dotstar';
 import SPI from 'pi-spi';
 
-import { MAX } from './constants';
 import { lid } from './utilities';
 
 const spi = SPI.initialize('/dev/spidev0.0');
@@ -42,7 +41,7 @@ class LEDStrip {
         this.zero().sync();
         return this;
     }
-    setLED = (index, r, g, b) => {
+    setLED = (index, r, g, b, a=.1) => {
         /**
          * setLED() - wrapper for ledStrip.set()
          * 
@@ -50,14 +49,10 @@ class LEDStrip {
          * @param {float} r - red value
          * @param {float} g - green value
          * @param {float} b - blue value
+         * @param {float} a - alpha (brightness)
          */
 
-        // minimum brightness of 1 to deal with flickering issues
-        // r = r >= 1 ? r : 0;
-        // g = g >= 1 ? g : 0;
-        // b = b >= 1 ? b : 0;
-
-        this.ledStrip.set(index, lid(r), lid(g), lid(b), .8);
+        this.ledStrip.set(index, lid(r), lid(g), lid(b), lid(a));
         return this;
     };
 }

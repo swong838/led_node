@@ -80,12 +80,6 @@ const rain = (effectBuffer) => {
         );
     }, 250);
 
-    // setInterval(() => {
-    //     if (renderer.run && renderer.effects.length < 1) {
-    //         renderer.effects.push(raindrop())
-    //     }
-    // }, 1000)
-
     return renderer;
 }
 

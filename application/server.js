@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { debug } from '../src/lib/constants';
-import { log } from '../src/lib/utilities'; 
+import { log, Buffer } from '../src/lib/utilities'; 
 
 import diagnostics from '../src/lib/diagnostics';
 // import led_cells from '../src/effects/cell/renderer_cells';
@@ -18,45 +18,33 @@ server.use('/', express.static('./application/client'))
 server.use('/testbed', express.static('./application/client/testbed.html'))
 server.use('/wave', express.static('./application/client/wave.html'))
 
-
-const effectBuffer = function(){
-    let _buffer = [];
-    return {
-        add: item => _buffer.push(item),
-        append: items => _buffer.push([...items]),
-        get: () => {
-            const out = [..._buffer];
-            _buffer = [];
-            return out;
+if (debug) {
+    server.post('/lab/', async (req, response) => {
+        let effectSettings = {...req.body};
+        for (let v in effectSettings) {
+            var tempV = parseFloat(effectSettings[v]);
+            /**
+                Yes, this is an eval.
+                It's meant to let us develop algorithmic effects without needing to restart the node server.
+                Of course it's behind the `debug` flag.
+            */
+            if (isNaN(tempV)) {
+                eval(`tempV = ${effectSettings[v]}`);
+            }
+            effectSettings[v] = tempV;
         }
-    }
-}();
+        effectBuffer.add(effectSettings);
+        response.json('ok');
+    });
+}
 
-
-const mode = 3;
+const effectBuffer = Buffer();
+const defaultMode = 3;
+const mode = parseInt(process.argv.slice(2), 10) || defaultMode;
 
 switch (mode){
     case 1:
         log('starting lab');
-        if (debug) {
-            server.post('/lab/', async (req, response) => {
-                let effectSettings = {...req.body};
-                for (let v in effectSettings) {
-                    var tempV = parseFloat(effectSettings[v]);
-                    /**
-                        Yes, this is an eval.
-                        It's meant to let us develop algorithmic effects without needing to restart the node server.
-                        Of course it's behind the `debug` flag.
-                    */
-                    if (isNaN(tempV)) {
-                        eval(`tempV = ${effectSettings[v]}`);
-                    }
-                    effectSettings[v] = tempV;
-                }
-                effectBuffer.add(effectSettings);
-                response.json('ok');
-            });
-        }
         test_point_light(effectBuffer).go();
         break;
 

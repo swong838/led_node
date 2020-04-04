@@ -4,7 +4,7 @@ import LEDStrip from '../../lib/led_strip';
 import { log } from '../../lib/utilities';
 import { STRIP_LENGTH } from '../../lib/constants';
 
-class Renderer{
+class Renderer {
     constructor(renderMethod) {
         this.length = STRIP_LENGTH;
         this.ledStrip = new LEDStrip(this.length);
@@ -14,16 +14,24 @@ class Renderer{
     }
 
     advance = () => {
-        let newEffects = [];
-        this.effects = this.effects.filter(effect => {
-            effect.propagate();
-            if (effect.spawns) {
-                newEffects.push(...effect.spawns);
-                effect.spawns = [];
+        if (this.effects.length) {
+            // If a falsey entry was pushed in, clear this renderer.
+            if (!this.effects.every(e => e)) {
+                this.flush();
+                return;
             }
-            return effect.alive;
-        });
-        this.effects.push(...newEffects);
+
+            let newEffects = [];
+            this.effects = this.effects.filter(effect => {
+                effect.propagate();
+                if (effect.spawns) {
+                    newEffects.push(...effect.spawns);
+                    effect.spawns = [];
+                }
+                return effect.alive;
+            });
+            this.effects.push(...newEffects);
+        }
     }
 
     tick = () => {
@@ -32,6 +40,7 @@ class Renderer{
             this.render();
         }
     }
+    flush = () => this.effects = [];
     go = () => this.run = true;
     stop = () => this.run = false; 
 }

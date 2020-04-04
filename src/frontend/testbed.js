@@ -92,23 +92,22 @@ class App extends Component {
         }
     })
 
-    send = async () => {
+    send = async (payload) => {
         const route = '/lab';
         const response = await fetch(route, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(this.state)
+            body: JSON.stringify(payload)
         });
         return await response.json();
     }
+    sync = async () => await this.send(this.state)
 
     render = () => {
         return (
             <article>
-                <header>
-                    Strip length: {STRIP_LENGTH}
-                </header>
-                <section><button onClick={this.send}>Send</button></section>
+                <header>Strip length: {STRIP_LENGTH}</header>
+                <section><button onClick={this.sync}>Sync</button></section>
                 {this.getInputs()}
             </article>
         );
