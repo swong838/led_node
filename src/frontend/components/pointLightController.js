@@ -20,10 +20,10 @@ class PointLightController extends Component {
             velocity: 0.01,
             fade: 2.2,
 
-            r_falloff: 0,
-            g_falloff: 0,
-            b_falloff: 0,
-            velocity_falloff: 0,
+            r_delta: 0,
+            g_delta: 0,
+            b_delta: 0,
+            velocity_delta: 0,
 
             max_age: 300,
             leftBoundary: -MAXDISTANCE,
@@ -42,12 +42,13 @@ class PointLightController extends Component {
             {name: 'g', type: 'range', min: 0, max: 200, step: .1},
             {name: 'b', type: 'range', min: 0, max: 200, step: .1},
             {name: 'a', type: 'range', min: 0, max: 1, step: .1},
-            {name: 'r_falloff', type: 'range', min: 0, max: 3, step: .1},
-            {name: 'g_falloff', type: 'range', min: 0, max: 3, step: .1},
-            {name: 'b_falloff', type: 'range', min: 0, max: 3, step: .1},
+            {name: 'r_delta', type: 'range', min: 0, max: 3, step: .1},
+            {name: 'g_delta', type: 'range', min: 0, max: 3, step: .1},
+            {name: 'b_delta', type: 'range', min: 0, max: 3, step: .1},
+            {name: 'a_delta', type: 'range', min: 0, max: 3, step: .1},
 
             {name: 'velocity', type: 'range', min: -1, max: 1, step: .01},
-            {name: 'velocity_falloff', type: 'range', min: 0, max: 10, step: 1},
+            {name: 'velocity_delta', type: 'range', min: 0, max: 10, step: 1},
 
             {name: 'max_age', type: 'range', min: 0, max: MAXAGE - 1, step: 1},
             {name: 'leftBoundary', type: 'range', min: -MAXDISTANCE, max: MAXDISTANCE, step: 1},

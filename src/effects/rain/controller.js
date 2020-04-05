@@ -35,11 +35,11 @@ const rain = (effectBuffer) => {
             position: randInt(STRIP_LENGTH),
             fade: 4,
             b: .07,
-            r_falloff: function(){this.r = Math.max(this.b * .7 - .05, 0);},
-            g_falloff: function(){this.g = Math.max(this.b * .8 - .05, 0);},
-            b_falloff: function(){this.b = this.b * 1.005;},
+            r_delta: function(){this.r = Math.max(this.b * .7 - .05, 0);},
+            g_delta: function(){this.g = Math.max(this.b * .8 - .05, 0);},
+            b_delta: function(){this.b = this.b * 1.005;},
             velocity: .0005,
-            velocity_falloff: function(){this.velocity *= 1.0015;},
+            velocity_delta: function(){this.velocity *= 1.0015;},
             respawns: 1,
             onPropagate: function(){if(this.b > 35){ this.alive = false; }},
             onDeath: function(){
@@ -49,10 +49,10 @@ const rain = (effectBuffer) => {
                     r: this.r * .33,
                     g: this.g * .33,
                     b: this.b * .33,
-                    r_falloff: .12,
-                    g_falloff: .12,
-                    b_falloff: .12,
-                    velocity_falloff: function(){this.velocity *= .955;},
+                    r_delta: .12,
+                    g_delta: .12,
+                    b_delta: .12,
+                    velocity_delta: function(){this.velocity *= .955;},
                     max_age: 1200,
                 };
                 this.spawns.push(...[
@@ -84,29 +84,3 @@ const rain = (effectBuffer) => {
 }
 
 export default rain;
-
-
-/*
-
-tuning 
-
-r_falloff:
-function(){this.r = Math.max(this.b * .07 - .25, 0)}
-
-g_falloff:
-function(){this.g = Math.max(this.b * .12 - .25, 0)}
-
-b_falloff:
-function(){this.b = this.b * 1.005; if(this.b > 35){ this.alive = false; }}
-
-velocity:
-.0002
-
-velocity_falloff:
-function(){this.velocity *= 1.001}
-
-max_age:
-1870
-
-
- */

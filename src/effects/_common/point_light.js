@@ -20,10 +20,10 @@ class PointLight {
         // How this light will change over time.
         // These may be numbers, or they may be functions.
         // Functions will be bound to have access to `this`...
-        @param {number, function} r_falloff - change in r per tick
-        @param {number, function} g_falloff - change in g per tick
-        @param {number, function} b_falloff - change in b per tick
-        @param {number, function} velocity_falloff - change in velocity per tick
+        @param {number, function} r_delta - change in r per tick
+        @param {number, function} g_delta - change in g per tick
+        @param {number, function} b_delta - change in b per tick
+        @param {number, function} velocity_delta - change in velocity per tick
 
         // Other interesting callbacks
         @param {function} onPropagate - checks to run every time this light propagates
@@ -46,10 +46,10 @@ class PointLight {
         velocity = 0,
         fade = 2.2,
 
-        r_falloff = 0,
-        g_falloff = 0,
-        b_falloff = 0,
-        velocity_falloff = 0,
+        r_delta = 0,
+        g_delta = 0,
+        b_delta = 0,
+        velocity_delta = 0,
 
         onPropagate = function(){},
         onDeath = function(){},
@@ -82,21 +82,21 @@ class PointLight {
         this.rightBoundary = Math.min(rightBoundary, STRIP_LENGTH + MAXDISTANCE);
 
         // Handle falloffs as either numbers or callbacks
-        this._updateRed = () => this.r -= r_falloff;
-        this._updateGreen = () => this.g -= g_falloff;
-        this._updateBlue = () => this.b -= b_falloff;
-        this._updateVelocity = () => this.velocity -= velocity_falloff;
-        if (typeof r_falloff === 'function') {
-            this._updateRed = r_falloff.bind(this);
+        this._updateRed = () => this.r -= r_delta;
+        this._updateGreen = () => this.g -= g_delta;
+        this._updateBlue = () => this.b -= b_delta;
+        this._updateVelocity = () => this.velocity -= velocity_delta;
+        if (typeof r_delta === 'function') {
+            this._updateRed = r_delta.bind(this);
         }
-        if (typeof g_falloff === 'function') {
-            this._updateGreen = g_falloff.bind(this);
+        if (typeof g_delta === 'function') {
+            this._updateGreen = g_delta.bind(this);
         }
-        if (typeof b_falloff === 'function') {
-            this._updateBlue = b_falloff.bind(this);
+        if (typeof b_delta === 'function') {
+            this._updateBlue = b_delta.bind(this);
         }
-        if (typeof velocity_falloff === 'function') {
-            this._updateVelocity = velocity_falloff.bind(this);
+        if (typeof velocity_delta === 'function') {
+            this._updateVelocity = velocity_delta.bind(this);
         }
 
         // intrinsic properties
