@@ -20,26 +20,38 @@ server.use('/wave', express.static('./application/client/wave.html'))
 
 if (debug) {
     server.post('/lab/', async (req, response) => {
-        let effectSettings = {...req.body};
-        for (let v in effectSettings) {
-            var tempV = parseFloat(effectSettings[v]);
-            /**
-                Yes, this is an eval.
-                It's meant to let us develop algorithmic effects without needing to restart the node server.
-                Of course it's behind the `debug` flag.
-            */
-            if (isNaN(tempV)) {
-                eval(`tempV = ${effectSettings[v]}`);
-            }
-            effectSettings[v] = tempV;
+
+        const input = {...req.body};
+        let effectSettings = {...input.settings};
+
+        switch (input.type) {
+            case 'pointLight':
+                log('adding pointLight');
+                for (let v in effectSettings) {
+                    var tempV = parseFloat(effectSettings[v]);
+                    /**
+                        Yes, this is an eval.
+                        It's meant to let us develop algorithmic effects without needing to restart the node server.
+                        Of course it's behind the `debug` flag.
+                    */
+                    if (isNaN(tempV)) {
+                        eval(`tempV = ${effectSettings[v]}`);
+                    }
+                    effectSettings[v] = tempV;
+                }
+                effectBuffer.add(effectSettings);
+                break;
+
+            default:
+                log('flushing buffer');
+                effectBuffer.add(false);
         }
-        effectBuffer.add(effectSettings);
         response.json('ok');
     });
 }
 
 const effectBuffer = Buffer();
-const defaultMode = 3;
+const defaultMode = 1;
 const mode = parseInt(process.argv.slice(2), 10) || defaultMode;
 
 switch (mode){

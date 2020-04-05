@@ -41,7 +41,7 @@ class LEDStrip {
         this.zero().sync();
         return this;
     }
-    setLED = (index, r, g, b, a=.1) => {
+    setLED = (index, r, g, b, a=.2) => {
         /**
          * setLED() - wrapper for ledStrip.set()
          * 

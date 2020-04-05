@@ -42,6 +42,7 @@ class PointLight {
         r = 0,
         g = 0,
         b = 0,
+        a = 0,
         velocity = 0,
         fade = 2.2,
 
@@ -67,6 +68,7 @@ class PointLight {
         this.r = this.initial_r = r;
         this.g = this.initial_g = g;
         this.b = this.initial_b = b;
+        this.a = this.initial_a = a;
         this.velocity = this.initial_velocity = velocity;
         this.fade = this.initial_fade = fade;
 
@@ -110,7 +112,7 @@ class PointLight {
             origin=${this.origin}
             velocity=${this.velocity}
             respawns=${this.respawns}
-            r${this.r} g${this.g} b${this.b}
+            r${this.r} g${this.g} b${this.b} a ${this.a}
             left=${this.leftBoundary} right=${this.rightBoundary}`
         )
 
@@ -171,6 +173,7 @@ class PointLight {
                 r${this.r}
                 g${this.g}
                 b${this.b}
+                a${this.a}
                 age${this.age}
             `);
             this.onDeath();
@@ -182,13 +185,14 @@ class PointLight {
          * Return the RGB effect this light source would have at target_location
          * @param {int} target_location
          * Returns:
-         *    {r, g, b} 
+         *    {r, g, b, a} 
          */
         const power = 1 / Math.pow(Math.abs(target_location - this.position), this.fade);
         const illumination = {
             r: this.r * power,
             g: this.g * power,
             b: this.b * power,
+            a: this.a
         }
         return illumination;
     }

@@ -16,7 +16,9 @@ class Renderer {
     advance = () => {
         if (this.effects.length) {
             // If a falsey entry was pushed in, clear this renderer.
+
             if (!this.effects.every(e => e)) {
+                log('flushing')
                 this.flush();
                 return;
             }
