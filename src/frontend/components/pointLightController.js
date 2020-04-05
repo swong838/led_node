@@ -17,7 +17,7 @@ class PointLightController extends Component {
             g: 0,
             b: 0,
             a: .5,
-            velocity: 0,
+            velocity: 0.01,
             fade: 2.2,
 
             r_falloff: 0,
@@ -25,10 +25,13 @@ class PointLightController extends Component {
             b_falloff: 0,
             velocity_falloff: 0,
 
-            max_age: MAXAGE - 1,
+            max_age: 300,
             leftBoundary: -MAXDISTANCE,
             rightBoundary: STRIP_LENGTH + MAXDISTANCE,
             respawns: 0,
+
+            // helpers for the autocycler
+            flipCycle: false,
             cycle: false,
         };
 
@@ -43,7 +46,7 @@ class PointLightController extends Component {
             {name: 'g_falloff', type: 'range', min: 0, max: 3, step: .1},
             {name: 'b_falloff', type: 'range', min: 0, max: 3, step: .1},
 
-            {name: 'velocity', type: 'range', min: -2, max: 2, step: .01},
+            {name: 'velocity', type: 'range', min: -1, max: 1, step: .01},
             {name: 'velocity_falloff', type: 'range', min: 0, max: 10, step: 1},
 
             {name: 'max_age', type: 'range', min: 0, max: MAXAGE - 1, step: 1},
@@ -97,7 +100,7 @@ class PointLightController extends Component {
                     <input type='range' onChange={callback} value={this.state[name]} name={name} min={min} max={max} step={step} />
                 </td>
                 <td>
-                    <input type='text' onChange={callback} value={this.state[name]} name={name} />
+                    <textarea onChange={callback} value={this.state[name]} name={name} />
                 </td>
                 <td>
                     <code>{this.state[name]}</code>
@@ -106,21 +109,33 @@ class PointLightController extends Component {
         );
     }
 
+    /* -- support autodraw -- */
     componentDidUpdate () {
-        if (this.state.cycle) {
-           this.doCycle()
+        // workaround for async state changes
+        if (this.state.cycle && this.state.flipCycle) {
+           this.doCycle();
         }
     }
 
     doCycle() {
+        // push pixels to the server as long as cycle is activated
         if (this.state.cycle) {
             this.send();
-            setTimeout(this.doCycle, 500);
+            setTimeout(this.doCycle, 1000);
         }
+
+        // debounce changes from other state updates
+        this.setState({flipCycle: false});
     }
 
     setCycleMode() {
-        this.setState({cycle: !this.state.cycle});
+        // flip the cycle flag
+        this.setState(
+            {
+                flipCycle: true, // only trigger autodraw when setCycleMode is called
+                cycle: !this.state.cycle
+            }
+        );
     }
 
     async send () {
