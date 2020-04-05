@@ -16,6 +16,7 @@ class PointLightController extends Component {
             r: 0,
             g: 0,
             b: 0,
+            a: .5,
             velocity: 0,
             fade: 2.2,
 
@@ -28,6 +29,7 @@ class PointLightController extends Component {
             leftBoundary: -MAXDISTANCE,
             rightBoundary: STRIP_LENGTH + MAXDISTANCE,
             respawns: 0,
+            cycle: false,
         };
 
         this.controls = [
@@ -36,6 +38,7 @@ class PointLightController extends Component {
             {name: 'r', type: 'range', min: 0, max: 200, step: .1},
             {name: 'g', type: 'range', min: 0, max: 200, step: .1},
             {name: 'b', type: 'range', min: 0, max: 200, step: .1},
+            {name: 'a', type: 'range', min: 0, max: 1, step: .1},
             {name: 'r_falloff', type: 'range', min: 0, max: 3, step: .1},
             {name: 'g_falloff', type: 'range', min: 0, max: 3, step: .1},
             {name: 'b_falloff', type: 'range', min: 0, max: 3, step: .1},
@@ -53,6 +56,10 @@ class PointLightController extends Component {
         this.cb = this.cb.bind(this);
         this.fields = this.fields.bind(this);
         this.rangeInput = this.rangeInput.bind(this);
+
+        this.doCycle = this.doCycle.bind(this);
+        this.setCycleMode = this.setCycleMode.bind(this);
+
         this.send = this.send.bind(this);
     }
 
@@ -99,6 +106,23 @@ class PointLightController extends Component {
         );
     }
 
+    componentDidUpdate () {
+        if (this.state.cycle) {
+           this.doCycle()
+        }
+    }
+
+    doCycle() {
+        if (this.state.cycle) {
+            this.send();
+            setTimeout(this.doCycle, 500);
+        }
+    }
+
+    setCycleMode() {
+        this.setState({cycle: !this.state.cycle});
+    }
+
     async send () {
         const route = '/lab';
         const payload = {
@@ -118,7 +142,15 @@ class PointLightController extends Component {
             <table>
                 <thead>
                     <tr>
-                        <th colSpan="2"><button onClick={this.send}>Send</button></th>
+                        <th colSpan="2">
+                            <button onClick={this.send} disabled={this.state.cycle}>
+                                Send
+                            </button>
+                            <button onClick={this.setCycleMode}>
+                                {this.state.cycle ? 'Halt' : 'Cycle'}
+                            </button>
+
+                        </th>
                         <th colSpan="2">Light {this.state.id}</th>
                     </tr>
                 </thead>

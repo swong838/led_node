@@ -42,7 +42,7 @@ const test_point_light = (effectBuffer) => {
                 }
             )
         );
-    }, 500);
+    }, 100);
     return renderer;
 }
 
