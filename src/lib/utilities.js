@@ -16,13 +16,6 @@ export const clamp = (v, b, t) => Math.max(Math.min(v, t), b);
  */
 export const randInt = v => Math.floor(Math.random() * v);
 
-
-export const randBetween = (b, t) => {
-    
-}
-
-
-
 /**
  * lid() Clamp value v so it's between 0 and MAX, inclusive
  * @param {number} v 
@@ -40,3 +33,16 @@ export const log = s => debug ? console.log(s) : null;
  * @param {number} v 
  */
 export const perSecond = v => v / ticksPerSecond;
+
+export const Buffer = function(){
+    let _buffer = [];
+    return {
+        add: item => _buffer.push(item),
+        append: items => _buffer.push([...items]),
+        get: () => {
+            const out = [..._buffer];
+            _buffer = [];
+            return out;
+        }
+    }
+};

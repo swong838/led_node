@@ -11,21 +11,21 @@ const test_point_light = (effectBuffer) => {
         this.effects.forEach(effect => {
             const [lower, upper] = effect.range();
             for (let p = lower; p <= upper; p++) {
-                const {r, g, b} = effect.poll(p);
+                const {r, g, b, a} = effect.poll(p);
                 if (p in touched) {
                     touched[p].r += r;
                     touched[p].g += g;
                     touched[p].b += b;
                 }
                 else {
-                    touched[p] = {r, g, b};
+                    touched[p] = {r, g, b, a};
                 }
             }
         });
         this.ledStrip.zero();
         for (const index in touched) {
-            const {r, g, b} = touched[index];
-            this.ledStrip.setLED(index, r, g, b);
+            const {r, g, b, a} = touched[index];
+            this.ledStrip.setLED(index, r, g, b, a);
         }
         this.ledStrip.sync();
     });
@@ -35,11 +35,14 @@ const test_point_light = (effectBuffer) => {
         renderer.effects.push(
             ...effectBuffer.get().map(
                 settings => {
+                    if (!settings) {
+                        return false;
+                    }
                     return new PointLight({...settings});
                 }
             )
         );
-    }, 250);
+    }, 100);
     return renderer;
 }
 

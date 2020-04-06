@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { debug } from '../src/lib/constants';
-import { log } from '../src/lib/utilities'; 
+import { log, Buffer } from '../src/lib/utilities'; 
 
 import diagnostics from '../src/lib/diagnostics';
 // import led_cells from '../src/effects/cell/renderer_cells';
@@ -18,29 +18,15 @@ server.use('/', express.static('./application/client'))
 server.use('/testbed', express.static('./application/client/testbed.html'))
 server.use('/wave', express.static('./application/client/wave.html'))
 
+if (debug) {
+    server.post('/lab/', async (req, response) => {
 
-const effectBuffer = function(){
-    let _buffer = [];
-    return {
-        add: item => _buffer.push(item),
-        append: items => _buffer.push([...items]),
-        get: () => {
-            const out = [..._buffer];
-            _buffer = [];
-            return out;
-        }
-    }
-}();
+        const input = {...req.body};
+        let effectSettings = {...input.settings};
 
-
-const mode = 3;
-
-switch (mode){
-    case 1:
-        log('starting lab');
-        if (debug) {
-            server.post('/lab/', async (req, response) => {
-                let effectSettings = {...req.body};
+        switch (input.type) {
+            case 'pointLight':
+                log('adding pointLight');
                 for (let v in effectSettings) {
                     var tempV = parseFloat(effectSettings[v]);
                     /**
@@ -54,9 +40,23 @@ switch (mode){
                     effectSettings[v] = tempV;
                 }
                 effectBuffer.add(effectSettings);
-                response.json('ok');
-            });
+                break;
+
+            default:
+                log('flushing buffer');
+                effectBuffer.add(false);
         }
+        response.json('ok');
+    });
+}
+
+const effectBuffer = Buffer();
+const defaultMode = 1;
+const mode = parseInt(process.argv.slice(2), 10) || defaultMode;
+
+switch (mode){
+    case 1:
+        log('starting lab');
         test_point_light(effectBuffer).go();
         break;
 

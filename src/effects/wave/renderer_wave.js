@@ -41,10 +41,10 @@ const ledStripLength = 122;
 const randomWave = () => {
     return new Wave({
         origin: randInt(ledStripLength),
-        r: randInt(125)+ 20,
-        g: randInt(125)+ 20,
-        b: randInt(125)+ 20,
-        velocity: (Math.random() * .04),
+        r: randInt(105)+ 10,
+        g: randInt(105)+ 10,
+        b: randInt(105)+ 10,
+        velocity: (Math.random() * .02),
         velocityFalloff: Math.min(Math.random(), .00002),
         powerFalloff: (Math.random() * .125),
         // origin: 40,

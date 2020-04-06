@@ -20,10 +20,11 @@ class PointLight {
         // How this light will change over time.
         // These may be numbers, or they may be functions.
         // Functions will be bound to have access to `this`...
-        @param {number, function} r_falloff - change in r per tick
-        @param {number, function} g_falloff - change in g per tick
-        @param {number, function} b_falloff - change in b per tick
-        @param {number, function} velocity_falloff - change in velocity per tick
+        @param {number, function} r_delta - change in r per tick
+        @param {number, function} g_delta - change in g per tick
+        @param {number, function} b_delta - change in b per tick
+        @param {number, function} a_delta - change in a per tick
+        @param {number, function} velocity_delta - change in velocity per tick
 
         // Other interesting callbacks
         @param {function} onPropagate - checks to run every time this light propagates
@@ -42,13 +43,15 @@ class PointLight {
         r = 0,
         g = 0,
         b = 0,
+        a = 0,
         velocity = 0,
         fade = 2.2,
 
-        r_falloff = 0,
-        g_falloff = 0,
-        b_falloff = 0,
-        velocity_falloff = 0,
+        r_delta = 0,
+        g_delta = 0,
+        b_delta = 0,
+        a_delta = 0,
+        velocity_delta = 0,
 
         onPropagate = function(){},
         onDeath = function(){},
@@ -67,6 +70,7 @@ class PointLight {
         this.r = this.initial_r = r;
         this.g = this.initial_g = g;
         this.b = this.initial_b = b;
+        this.a = this.initial_a = a;
         this.velocity = this.initial_velocity = velocity;
         this.fade = this.initial_fade = fade;
 
@@ -80,21 +84,25 @@ class PointLight {
         this.rightBoundary = Math.min(rightBoundary, STRIP_LENGTH + MAXDISTANCE);
 
         // Handle falloffs as either numbers or callbacks
-        this._updateRed = () => this.r -= r_falloff;
-        this._updateGreen = () => this.g -= g_falloff;
-        this._updateBlue = () => this.b -= b_falloff;
-        this._updateVelocity = () => this.velocity -= velocity_falloff;
-        if (typeof r_falloff === 'function') {
-            this._updateRed = r_falloff.bind(this);
+        this._updateRed = () => this.r -= r_delta;
+        this._updateGreen = () => this.g -= g_delta;
+        this._updateBlue = () => this.b -= b_delta;
+        this._updateAlpha = () => this.a -= a_delta;
+        this._updateVelocity = () => this.velocity -= velocity_delta;
+        if (typeof r_delta === 'function') {
+            this._updateRed = r_delta.bind(this);
         }
-        if (typeof g_falloff === 'function') {
-            this._updateGreen = g_falloff.bind(this);
+        if (typeof g_delta === 'function') {
+            this._updateGreen = g_delta.bind(this);
         }
-        if (typeof b_falloff === 'function') {
-            this._updateBlue = b_falloff.bind(this);
+        if (typeof b_delta === 'function') {
+            this._updateBlue = b_delta.bind(this);
         }
-        if (typeof velocity_falloff === 'function') {
-            this._updateVelocity = velocity_falloff.bind(this);
+        if (typeof a_delta === 'function') {
+            this._updateAlpha = a_delta.bind(this);
+        }
+        if (typeof velocity_delta === 'function') {
+            this._updateVelocity = velocity_delta.bind(this);
         }
 
         // intrinsic properties
@@ -110,7 +118,7 @@ class PointLight {
             origin=${this.origin}
             velocity=${this.velocity}
             respawns=${this.respawns}
-            r${this.r} g${this.g} b${this.b}
+            r${this.r} g${this.g} b${this.b} a ${this.a}
             left=${this.leftBoundary} right=${this.rightBoundary}`
         )
 
@@ -138,6 +146,7 @@ class PointLight {
         this._updateRed();
         this._updateGreen();
         this._updateBlue();
+        this._updateAlpha();
         this._updateVelocity();
 
         // apply propagate handler
@@ -171,6 +180,7 @@ class PointLight {
                 r${this.r}
                 g${this.g}
                 b${this.b}
+                a${this.a}
                 age${this.age}
             `);
             this.onDeath();
@@ -182,13 +192,14 @@ class PointLight {
          * Return the RGB effect this light source would have at target_location
          * @param {int} target_location
          * Returns:
-         *    {r, g, b} 
+         *    {r, g, b, a} 
          */
         const power = 1 / Math.pow(Math.abs(target_location - this.position), this.fade);
         const illumination = {
             r: this.r * power,
             g: this.g * power,
             b: this.b * power,
+            a: this.a
         }
         return illumination;
     }
