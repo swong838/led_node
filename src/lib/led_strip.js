@@ -52,7 +52,7 @@ class LEDStrip {
          * @param {float} a - alpha (brightness)
          */
 
-        this.ledStrip.set(index, lid(r), lid(g), lid(b), lid(a));
+        this.ledStrip.set(index, lid(r), lid(g), lid(b), Math.min(a, 1));
         return this;
     };
 }

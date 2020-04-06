@@ -4,7 +4,7 @@ import PointLight from '../_common/point_light';
 import { TICKRATE, STRIP_LENGTH } from '../../lib/constants';
 import { log, randInt } from '../../lib/utilities';
 
-const rain = (effectBuffer) => {
+const fireflies = (effectBuffer) => {
 
     const renderer = new Renderer(function(){
         let touched = {};

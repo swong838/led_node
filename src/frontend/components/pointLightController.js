@@ -23,6 +23,7 @@ class PointLightController extends Component {
             r_delta: 0,
             g_delta: 0,
             b_delta: 0,
+            a_delta: 0,
             velocity_delta: 0,
 
             max_age: 300,
@@ -30,7 +31,7 @@ class PointLightController extends Component {
             rightBoundary: STRIP_LENGTH + MAXDISTANCE,
             respawns: 0,
 
-            // helpers for the autocycler
+            // autodraw helpers
             flipCycle: false,
             cycle: false,
         };
@@ -38,28 +39,28 @@ class PointLightController extends Component {
         this.controls = [
             {name: 'position', type: 'range', min: 0, max: STRIP_LENGTH-1, step: 1},
 
-            {name: 'r', type: 'range', min: 0, max: 200, step: .1},
-            {name: 'g', type: 'range', min: 0, max: 200, step: .1},
-            {name: 'b', type: 'range', min: 0, max: 200, step: .1},
-            {name: 'a', type: 'range', min: 0, max: 1, step: .1},
-            {name: 'r_delta', type: 'range', min: 0, max: 3, step: .1},
-            {name: 'g_delta', type: 'range', min: 0, max: 3, step: .1},
-            {name: 'b_delta', type: 'range', min: 0, max: 3, step: .1},
-            {name: 'a_delta', type: 'range', min: 0, max: 3, step: .1},
+            {name: 'r', min: 0, max: 200, step: .1},
+            {name: 'g', min: 0, max: 200, step: .1},
+            {name: 'b', min: 0, max: 200, step: .1},
+            {name: 'a', min: 0, max: 1, step: .01},
+            {name: 'r_delta', type: 'hybrid', min: 0, max: 3, step: .1},
+            {name: 'g_delta', type: 'hybrid', min: 0, max: 3, step: .1},
+            {name: 'b_delta', type: 'hybrid', min: 0, max: 3, step: .1},
+            {name: 'a_delta', type: 'hybrid', min: -1, max: 1, step: .01},
 
-            {name: 'velocity', type: 'range', min: -1, max: 1, step: .01},
-            {name: 'velocity_delta', type: 'range', min: 0, max: 10, step: 1},
+            {name: 'velocity', min: -1, max: 1, step: .01},
+            {name: 'velocity_delta', type: 'hybrid', min: 0, max: 10, step: 1},
 
-            {name: 'max_age', type: 'range', min: 0, max: MAXAGE - 1, step: 1},
-            {name: 'leftBoundary', type: 'range', min: -MAXDISTANCE, max: MAXDISTANCE, step: 1},
-            {name: 'rightBoundary', type: 'range', min: STRIP_LENGTH + MAXDISTANCE, max: MAXDISTANCE, step: 1},
-            {name: 'fade', type: 'range', min: 0, max: 8, step: .1},
-            {name: 'respawns', type: 'range', min: 0, max: 4, step: 1}
+            {name: 'max_age', min: 0, max: MAXAGE - 1, step: 1},
+            {name: 'leftBoundary', min: -MAXDISTANCE, max: MAXDISTANCE, step: 1},
+            {name: 'rightBoundary', min: STRIP_LENGTH + MAXDISTANCE, max: MAXDISTANCE, step: 1},
+            {name: 'fade', min: 0, max: 8, step: .1},
+            {name: 'respawns', min: 0, max: 4, step: 1}
         ];
 
         this.cb = this.cb.bind(this);
+        this.doBlur = this.doBlur.bind(this);
         this.fields = this.fields.bind(this);
-        this.rangeInput = this.rangeInput.bind(this);
 
         this.doCycle = this.doCycle.bind(this);
         this.setCycleMode = this.setCycleMode.bind(this);
@@ -70,44 +71,47 @@ class PointLightController extends Component {
     cb (event) {
         event.preventDefault();
         const {name, value} = event.currentTarget;
-        let newState = {[name]: value};
+        this.setState({[name]: value});
+    }
 
-        // handle decimals
+    doBlur (event) {
+        // handle floating point inputs
+        event.preventDefault();
+        const {name, value} = event.currentTarget;
         if (numeric.test(value) && !trailing.test(value)) {
             const {min, max} = this.controls.find(control => control.name === name);
-            newState[name] = clamp(value, min, max);
+            this.setState({[name]: clamp(value, min, max)});
         }
-        this.setState(newState);
     }
 
     fields () {
         return this.controls.map((control, index) => {
-            switch (control.type) {
-                case 'range':
-                    return this.rangeInput({key: index, ...control});
-                default:
-                    return null;
-            }
-        });
-    }
+            const { name, type, callback=this.cb, min=0, max, step=1, } = control;
 
-    rangeInput ({ key, name, callback=this.cb, min=0, max, step=1,}) {
-        return (
-            <tr key={`input-${key}`}>
-                <td>
-                    <label>{name}: </label>
-                </td>
-                <td>
-                    <input type='range' onChange={callback} value={this.state[name]} name={name} min={min} max={max} step={step} />
-                </td>
-                <td>
-                    <textarea onChange={callback} value={this.state[name]} name={name} />
-                </td>
-                <td>
-                    <code>{this.state[name]}</code>
-                </td>
-            </tr>
-        );
+            const inputBlock = type === 'hybrid' ? (
+                <textarea onChange={callback} onBlur={this.doBlur} value={this.state[name]} name={name} />
+            ) : (
+                <input onChange={callback} onBlur={this.doBlur} value={this.state[name]} name={name} />
+            );
+
+            return (
+                <tr key={`input-${index}`}>
+                    <td>
+                        <label>{name}: </label>
+                    </td>
+                    <td>
+                        <input type='range' onChange={callback} value={this.state[name]} name={name} min={min} max={max} step={step} />
+                    </td>
+                    <td>
+                        {inputBlock}
+                    </td>
+                    <td>
+                        <code>{this.state[name]}</code>
+                    </td>
+                </tr>
+            );
+            
+        });
     }
 
     /* -- support autodraw -- */
@@ -138,6 +142,7 @@ class PointLightController extends Component {
             }
         );
     }
+    /* -- end support autodraw -- */
 
     async send () {
         const route = '/lab';

@@ -23,6 +23,7 @@ class PointLight {
         @param {number, function} r_delta - change in r per tick
         @param {number, function} g_delta - change in g per tick
         @param {number, function} b_delta - change in b per tick
+        @param {number, function} a_delta - change in a per tick
         @param {number, function} velocity_delta - change in velocity per tick
 
         // Other interesting callbacks
@@ -49,6 +50,7 @@ class PointLight {
         r_delta = 0,
         g_delta = 0,
         b_delta = 0,
+        a_delta = 0,
         velocity_delta = 0,
 
         onPropagate = function(){},
@@ -85,6 +87,7 @@ class PointLight {
         this._updateRed = () => this.r -= r_delta;
         this._updateGreen = () => this.g -= g_delta;
         this._updateBlue = () => this.b -= b_delta;
+        this._updateAlpha = () => this.a -= a_delta;
         this._updateVelocity = () => this.velocity -= velocity_delta;
         if (typeof r_delta === 'function') {
             this._updateRed = r_delta.bind(this);
@@ -94,6 +97,9 @@ class PointLight {
         }
         if (typeof b_delta === 'function') {
             this._updateBlue = b_delta.bind(this);
+        }
+        if (typeof a_delta === 'function') {
+            this._updateAlpha = a_delta.bind(this);
         }
         if (typeof velocity_delta === 'function') {
             this._updateVelocity = velocity_delta.bind(this);
@@ -140,6 +146,7 @@ class PointLight {
         this._updateRed();
         this._updateGreen();
         this._updateBlue();
+        this._updateAlpha();
         this._updateVelocity();
 
         // apply propagate handler
