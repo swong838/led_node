@@ -17,6 +17,13 @@ export const clamp = (v, b, t) => Math.max(Math.min(v, t), b);
 export const randInt = v => Math.floor(Math.random() * v);
 
 /**
+ * between() - Generate a random float between b and t
+ * @param {number} b bottom - minimum value
+ * @param {number} t top - maximum value
+ */
+export const between = (b, t) => (Math.random() * (t - b)) + b;
+
+/**
  * lid() Clamp value v so it's between 0 and MAX, inclusive
  * @param {number} v 
  */

@@ -9,7 +9,8 @@
     "diagnostics": "./node_modules/.bin/babel-node ./src/lib/test_lights.js",
     "lab": "nodemon --exec ./node_modules/.bin/babel-node application/server.js 1 && npm run client",
     "waves": "./node_modules/.bin/babel-node application/server.js 2",
-    "rain": "./node_modules/.bin/babel-node application/server.js 3"
+    "rain": "./node_modules/.bin/babel-node application/server.js 3",
+    "fireflies": "./node_modules/.bin/babel-node application/server.js 4"
   },
   "dependencies": {
     "@babel/cli": "^7.6.0",

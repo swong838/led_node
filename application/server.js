@@ -9,6 +9,7 @@ import led_waves from '../src/effects/wave/renderer_wave';
 import test_point_light from '../src/effects/_common/test_point_light';
 
 import rain from '../src/effects/rain/controller';
+import fireflies from '../src/effects/fireflies/controller';
 
 const port = process.env.PORT || 5000;
 const server = express();
@@ -68,6 +69,11 @@ switch (mode){
     case 3:
         log('starting rain');
         rain(effectBuffer).go();
+        break;
+
+    case 4:
+        log('starting fireflies');
+        fireflies(effectBuffer).go();
         break;
 
     default:
