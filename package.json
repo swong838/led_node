@@ -7,9 +7,9 @@
     "server": "nodemon --exec ./node_modules/.bin/babel-node application/server.js --ignore client",
     "develop": "reset && ./node_modules/.bin/concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "diagnostics": "./node_modules/.bin/babel-node ./src/lib/test_lights.js",
-    "lab": "nodemon --exec ./node_modules/.bin/babel-node application/server.js 1 && npm run client",
-    "waves": "./node_modules/.bin/babel-node application/server.js 2",
-    "rain": "./node_modules/.bin/babel-node application/server.js 3",
+    "lab": "nodemon --exec ./node_modules/.bin/babel-node ./application/server.js 1 && npm run client",
+    "waves": "./node_modules/.bin/babel-node ./application/server.js 2",
+    "rain": "./node_modules/.bin/babel-node ./application/server.js 3",
     "fireflies": "./node_modules/.bin/babel-node application/server.js 4"
   },
   "dependencies": {
@@ -26,7 +26,6 @@
     "es6-promise": "^4.2.8",
     "express": "^4.17.1",
     "nodemon": "^1.19.2",
-    "pi-spi": "^1.2.1",
     "react": "^16.9.0",
     "react-color-picker": "^4.0.2",
     "react-dom": "^16.9.0",
@@ -38,6 +37,7 @@
     "concurrently": "^4.1.2",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0",
+    "pi-spi": "^1.2.1",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"
   }
