@@ -7,7 +7,11 @@ import SPI from 'pi-spi';
 
 import { lid } from './utilities';
 
-const spi = SPI.initialize('/dev/spidev0.0');
+import { emulation } from './constants';
+
+
+const spi = emulation ? {} : SPI.initialize('/dev/spidev0.0');
+
 
 class LEDStrip {
 
@@ -24,7 +28,11 @@ class LEDStrip {
      */
     constructor(ledStripLength){
         this.length = parseInt(ledStripLength, 10);
-        this.ledStrip = new dotstar.Dotstar(spi, {
+        this.ledStrip = emulation ? {
+            sync: () => {},
+            all: () => {},
+            set: () => {},
+        } : new dotstar.Dotstar(spi, {
             length: this.length
         });
     }

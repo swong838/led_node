@@ -1,4 +1,5 @@
-export const debug = true;
+export const debug = false;          // logging
+export const emulation = false;      // emulate LED strip if we're not on actual hardware
 
 export const width = debug ? 60 : 15;
 export const height = debug ? 60 : 15;

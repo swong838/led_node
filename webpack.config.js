@@ -7,9 +7,10 @@ var BUILD_DIR = path.resolve(__dirname, './application/client/build/static');
 module.exports = {
     mode: "development",
     entry: {
-        cells: SRC_DIR + '/cells.js',
-        testbed: SRC_DIR + '/testbed.js',
-        wave: SRC_DIR + '/wave.js',
+        cells: `${SRC_DIR}/cells.js`,
+        testbed: `${SRC_DIR}/testbed.js`,
+        wave: `${SRC_DIR}/wave.js`,
+        remote: `${SRC_DIR}/remote.js`,
     },
     
     output: {
