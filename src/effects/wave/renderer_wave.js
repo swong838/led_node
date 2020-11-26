@@ -76,6 +76,8 @@ const led_waves = () => {
     const ledStrip = new LEDStrip(ledStripLength);
 
     let waves = [];
+    let run = false;
+    const foo = 'foo';
 
     const advance = () => {
         waves = waves.filter(wave => {
@@ -127,20 +129,13 @@ const led_waves = () => {
         ledStrip.sync();
     }
 
-
     //effect generator
-    
     setInterval(() => {
-        //performance.mark('startrender');
+
         advance();
         if (waves.length) {
             render();
         }
-        
-
-        //performance.mark('endrender');
-        //performance.measure('time in render', 'startrender', 'endrender');
-        //obs.observe({ entryTypes: ['measure'] });
 
         if (waves.length < 8 && Math.random() * 1002 > 900) {
             const newWave = randomWave();
@@ -148,12 +143,15 @@ const led_waves = () => {
         }
     }, TICKRATE);
 
-    // setInterval(() => {
-    //     if (waves.length < 4) {
-    //         const newWave = randomWave();
-    //         waves.push(newWave);
-    //     }
-    // }, 1500);
+    return {
+        go: () => {
+            console.log(foo);
+            run = true;
+        },
+        stop: () => {
+            run = false;
+        }
+    }
 
 }
 

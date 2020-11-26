@@ -8,10 +8,12 @@ import diagnostics from '../src/lib/diagnostics';
 import led_waves from '../src/effects/wave/renderer_wave';
 import test_point_light from '../src/effects/_common/test_point_light';
 
+import Renderer from '../src/effects/_common/renderer';'
+
 import rain from '../src/effects/rain/controller';
 import fireflies from '../src/effects/fireflies/controller';
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 5000;
 const server = express();
 server.use(express.json());
 server.use('/', express.static('./application/client'));
@@ -63,10 +65,8 @@ switch (mode){
          */
         log('starting remote mode');
 
-        let currentMode = {
-            go: () => {},
-            stop: () => {}
-        };
+        let currentMode = new Renderer(effectBuffer);
+        currentMode.ledStrip.clear();
 
         server.put('/remote/:mode', (req, res) => {
             const mode = req.params.mode;
@@ -75,17 +75,23 @@ switch (mode){
             currentMode.stop();
 
             switch (mode) {
+
                 case 'waves':
-                    break;
+                    currentMode = led_waves();
+
                 case 'fireflies':
                     currentMode = fireflies(effectBuffer)
-                    currentMode.go();
                     break;
                 case 'rain':
                     currentMode = rain(effectBuffer);
-                    currentMode.go();
                     break;
+
+                case 'stop':
                 default:
+                    currentMode = new Renderer(effectBuffer);
+                    currentMode.stop();
+                    currentMode.flush();
+                    currentMode.ledStrip.clear();
                     break;
             }
             res.send(`got ${mode}`);
