@@ -43,8 +43,12 @@ class Renderer {
         }
     }
     flush = () => this.effects = [];
-    go = () => this.run = true;
-    stop = () => this.run = false; 
+    go = () => {
+        this.run = true;
+    }
+    stop = () => {
+        this.run = false;
+    }
 }
 
 export default Renderer;

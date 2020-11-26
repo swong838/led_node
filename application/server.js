@@ -11,13 +11,14 @@ import test_point_light from '../src/effects/_common/test_point_light';
 import rain from '../src/effects/rain/controller';
 import fireflies from '../src/effects/fireflies/controller';
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 const server = express();
-server.use(express.json())
-server.use('/', express.static('./application/client'))
+server.use(express.json());
+server.use('/', express.static('./application/client'));
+server.use('/remote', express.static('./application/client/remote.html'));
 // server.use('/cells', express.static('./application/client/cells.html'))
-server.use('/testbed', express.static('./application/client/testbed.html'))
-server.use('/wave', express.static('./application/client/wave.html'))
+server.use('/testbed', express.static('./application/client/testbed.html'));
+server.use('/wave', express.static('./application/client/wave.html'));
 
 if (debug) {
     server.post('/lab/', async (req, response) => {
@@ -52,10 +53,45 @@ if (debug) {
 }
 
 const effectBuffer = Buffer();
-const defaultMode = 1;
+const defaultMode = 0;
 const mode = parseInt(process.argv.slice(2), 10) || defaultMode;
 
 switch (mode){
+    case 0:
+        /**
+         * Remote mode listener
+         */
+        log('starting remote mode');
+
+        let currentMode = {
+            go: () => {},
+            stop: () => {}
+        };
+
+        server.put('/remote/:mode', (req, res) => {
+            const mode = req.params.mode;
+            log(`mode setter called with ${mode}`);
+
+            currentMode.stop();
+
+            switch (mode) {
+                case 'waves':
+                    break;
+                case 'fireflies':
+                    currentMode = fireflies(effectBuffer)
+                    currentMode.go();
+                    break;
+                case 'rain':
+                    currentMode = rain(effectBuffer);
+                    currentMode.go();
+                    break;
+                default:
+                    break;
+            }
+            res.send(`got ${mode}`);
+        });
+        break;
+
     case 1:
         log('starting lab');
         test_point_light(effectBuffer).go();
