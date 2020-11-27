@@ -18,22 +18,22 @@ import {
 
 let renderTimer = [];
 
-const obs = new PerformanceObserver((items) => {
-    renderTimer.push(items.getEntries()[0].duration);
-    performance.clearMarks();
+// const obs = new PerformanceObserver((items) => {
+//     renderTimer.push(items.getEntries()[0].duration);
+//     performance.clearMarks();
 
-    // every 1000 frames, print average frame draw time
-    if (renderTimer.length >= 1000) {
-        const average = renderTimer.reduce(
-            (accumulator, time) => {return accumulator += time;},
-            0
-        ) / renderTimer.length;
-        readline.clearLine(process.stdout, 0);
-        readline.cursorTo(process.stdout, 0, null);
-        process.stdout.write(`average frame render => ${average.toFixed(2)} ms`);
-        renderTimer = [];
-    }
-});
+//     // every 1000 frames, print average frame draw time
+//     if (renderTimer.length >= 1000) {
+//         const average = renderTimer.reduce(
+//             (accumulator, time) => {return accumulator += time;},
+//             0
+//         ) / renderTimer.length;
+//         readline.clearLine(process.stdout, 0);
+//         readline.cursorTo(process.stdout, 0, null);
+//         process.stdout.write(`average frame render => ${average.toFixed(2)} ms`);
+//         renderTimer = [];
+//     }
+// });
 
 const TICKRATE = 2;
 const ledStripLength = 122;
@@ -77,7 +77,6 @@ const led_waves = () => {
 
     let waves = [];
     let run = false;
-    const foo = 'foo';
 
     const advance = () => {
         waves = waves.filter(wave => {
@@ -131,26 +130,24 @@ const led_waves = () => {
 
     //effect generator
     setInterval(() => {
+        if (run) {
+            advance();
+            if (waves.length) {
+                render();
+            }
 
-        advance();
-        if (waves.length) {
-            render();
-        }
-
-        if (waves.length < 8 && Math.random() * 1002 > 900) {
-            const newWave = randomWave();
-            waves.push(newWave);
+            if (waves.length < 8 && Math.random() * 1002 > 900) {
+                const newWave = randomWave();
+                waves.push(newWave);
+            }
         }
     }, TICKRATE);
 
+    const go = _ => run = true;
+    const stop = _ => run = false;
+
     return {
-        go: () => {
-            console.log(foo);
-            run = true;
-        },
-        stop: () => {
-            run = false;
-        }
+        go, stop
     }
 
 }

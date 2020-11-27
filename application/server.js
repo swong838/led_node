@@ -8,7 +8,7 @@ import diagnostics from '../src/lib/diagnostics';
 import led_waves from '../src/effects/wave/renderer_wave';
 import test_point_light from '../src/effects/_common/test_point_light';
 
-import Renderer from '../src/effects/_common/renderer';'
+import Renderer from '../src/effects/_common/renderer';
 
 import rain from '../src/effects/rain/controller';
 import fireflies from '../src/effects/fireflies/controller';
@@ -65,7 +65,7 @@ switch (mode){
          */
         log('starting remote mode');
 
-        let currentMode = new Renderer(effectBuffer);
+        let currentMode = new Renderer();
         currentMode.ledStrip.clear();
 
         server.put('/remote/:mode', (req, res) => {
@@ -73,22 +73,27 @@ switch (mode){
             log(`mode setter called with ${mode}`);
 
             currentMode.stop();
+            currentMode.flush();
+            currentMode.ledStrip.clear();
 
             switch (mode) {
 
                 case 'waves':
                     currentMode = led_waves();
+                    currentMode.go();
 
                 case 'fireflies':
-                    currentMode = fireflies(effectBuffer)
+                    currentMode = fireflies(effectBuffer);
+                    currentMode.go();
                     break;
                 case 'rain':
                     currentMode = rain(effectBuffer);
+                    currentMode.go();
                     break;
 
                 case 'stop':
                 default:
-                    currentMode = new Renderer(effectBuffer);
+                    currentMode = new Renderer();
                     currentMode.stop();
                     currentMode.flush();
                     currentMode.ledStrip.clear();

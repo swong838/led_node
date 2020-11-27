@@ -7,6 +7,7 @@ class App extends Component {
             'fireflies',
             'rain',
             'waves',
+            'stop',
         ].map(mode => (
             <button key={mode} onClick={e => {
                 e.preventDefault();
