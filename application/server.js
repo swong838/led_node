@@ -79,13 +79,15 @@ switch (mode){
             switch (mode) {
 
                 case 'waves':
-                    currentMode = led_waves();
+                    currentMode = led_waves(effectBuffer);
                     currentMode.go();
+                    break;
 
                 case 'fireflies':
                     currentMode = fireflies(effectBuffer);
                     currentMode.go();
                     break;
+
                 case 'rain':
                     currentMode = rain(effectBuffer);
                     currentMode.go();

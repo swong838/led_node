@@ -6,29 +6,7 @@ import { log, between, randInt } from '../../lib/utilities';
 
 const fireflies = (effectBuffer) => {
 
-    const renderer = new Renderer(function(){
-        let touched = {};
-        this.effects.forEach(effect => {
-            const [lower, upper] = effect.range();
-            for (let p = lower; p <= upper; p++) {
-                const {r, g, b} = effect.poll(p);
-                if (p in touched) {
-                    touched[p].r += r;
-                    touched[p].g += g;
-                    touched[p].b += b;
-                }
-                else {
-                    touched[p] = {r, g, b};
-                }
-            }
-        });
-        this.ledStrip.zero();
-        for (const index in touched) {
-            const {r, g, b} = touched[index];
-            this.ledStrip.setLED(index, r, g, b);
-        }
-        this.ledStrip.sync();
-    });
+    const renderer = new Renderer({});
 
     const firefly = () => {
 
@@ -49,6 +27,7 @@ const fireflies = (effectBuffer) => {
         });
     }
 
+    // main render loop
     setInterval(() => {
         renderer.tick();
         if (renderer.run && renderer.effects.length < 4 && (Math.random() * 1000 > 999.8)) {
@@ -56,6 +35,7 @@ const fireflies = (effectBuffer) => {
         }
     }, TICKRATE);
 
+    // pick up effects pushed in from UI
     setInterval(() => {
         renderer.effects.push(
             ...effectBuffer.get().map(
