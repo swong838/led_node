@@ -1,61 +1,11 @@
-/**
- * cell effect to LED strip
-*/
+import Renderer from '../_common/renderer';
+import { TICKRATE, STRIP_LENGTH } from '../../lib/constants';
+import { randInt, log } from '../../lib/utilities';
 
-// hardware
-import LEDStrip from '../../lib/led_strip';
-
-// performance
-import { PerformanceObserver, performance } from 'perf_hooks';
-import * as readline from 'readline';
 
 // effects
 import Wave from './wave';
 
-import {
-    randInt, log
-} from '../../lib/utilities';
-
-let renderTimer = [];
-
-// const obs = new PerformanceObserver((items) => {
-//     renderTimer.push(items.getEntries()[0].duration);
-//     performance.clearMarks();
-
-//     // every 1000 frames, print average frame draw time
-//     if (renderTimer.length >= 1000) {
-//         const average = renderTimer.reduce(
-//             (accumulator, time) => {return accumulator += time;},
-//             0
-//         ) / renderTimer.length;
-//         readline.clearLine(process.stdout, 0);
-//         readline.cursorTo(process.stdout, 0, null);
-//         process.stdout.write(`average frame render => ${average.toFixed(2)} ms`);
-//         renderTimer = [];
-//     }
-// });
-
-const TICKRATE = 2;
-const ledStripLength = 122;
-
-const randomWave = () => {
-    return new Wave({
-        origin: randInt(ledStripLength),
-        r: randInt(105)+ 10,
-        g: randInt(105)+ 10,
-        b: randInt(105)+ 10,
-        velocity: (Math.random() * .02),
-        velocityFalloff: Math.min(Math.random(), .00002),
-        powerFalloff: (Math.random() * .125),
-        // origin: 40,
-        // r: 125,
-        // g: 125,
-        // b: 125,
-        //velocity: .02,
-        // velocityFalloff: .000002,
-        // powerFalloff: .225
-    });
-}
 
 const mask = (position, distance) => {
     /**
@@ -65,18 +15,44 @@ const mask = (position, distance) => {
      * return
      *    (array) [bottom, top]
      */
-
     const bottom = Math.floor(Math.max(position - distance, 0));
     const top = Math.ceil(Math.min(position + distance, ledStripLength));
     return [bottom, top];
 }
 
-const led_waves = () => {
+const led_waves = (effectBuffer) => {
 
-    const ledStrip = new LEDStrip(ledStripLength);
+    const renderer = new Renderer();
+
+
+    const randomWave = () => {
+        return new Wave({
+            origin: randInt(STRIP_LENGTH),
+            r: randInt(105)+ 10,
+            g: randInt(105)+ 10,
+            b: randInt(105)+ 10,
+            velocity: (Math.random() * .02),
+            velocityFalloff: Math.min(Math.random(), .00002),
+            powerFalloff: (Math.random() * .125),
+        });
+    }
+
+    const mask = (position, distance) => {
+        /**
+         * max(position) - get range +- distance from position
+         *    floor of 0, ceiling of ledStripLength
+         * 
+         * return
+         *    (array) [bottom, top]
+         */
+        const bottom = Math.floor(Math.max(position - distance, 0));
+        const top = Math.ceil(Math.min(position + distance, ledStripLength));
+        return [bottom, top];
+    }
+
 
     let waves = [];
-    let run = false;
+
 
     const advance = () => {
         waves = waves.filter(wave => {
@@ -130,25 +106,17 @@ const led_waves = () => {
 
     //effect generator
     setInterval(() => {
-        if (run) {
-            advance();
-            if (waves.length) {
-                render();
-            }
+        advance();
+        if (waves.length) {
+            render();
+        }
 
-            if (waves.length < 8 && Math.random() * 1002 > 900) {
-                const newWave = randomWave();
-                waves.push(newWave);
-            }
+        if (waves.length < 8 && Math.random() * 1002 > 900) {
+            const newWave = randomWave();
+            waves.push(newWave);
         }
     }, TICKRATE);
 
-    const go = _ => run = true;
-    const stop = _ => run = false;
-
-    return {
-        go, stop
-    }
 
 }
 
