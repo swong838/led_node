@@ -1,5 +1,6 @@
 import Renderer from './renderer';
 import loadBitmap from '../../lib/bitmap';
+import { log } from '../../lib/utilities';
 
 
 class MapRenderer extends Renderer {
@@ -23,24 +24,35 @@ class MapRenderer extends Renderer {
         this.nextRow = this.nextRow.bind(this);
         this.currentTweenStep = 0;
 
+        this.render = this.defaultRenderer.bind(this);
+        this.advance = this.defaultAdvancer.bind(this);
+
+        log(`maprenderer initialized with image of length ${this.image.length}`)
+
     }
 
     defaultRenderer = () => {
+        log('map renderer')
         // Render one frame of this effect
-        for(let x = 0; x < this.image[currentRow].length; x++) {
+        for(let x = 0; x < this.image[this.currentRow].length; x++) {
             this.ledStrip.setLED(
                 x,
-                this.image[currentRow][x].r,
-                this.image[currentRow][x].g,
-                this.image[currentRow][x].b,
+                this.image[this.currentRow][x].r,
+                this.image[this.currentRow][x].g,
+                this.image[this.currentRow][x].b,
             );
         }
+        log(`pushing row at ${this.currentRow}`)
         this.ledStrip.sync();
+
+        this.currentRow = this.nextRow();
+
     }
 
     defaultAdvancer() {
         // Go to next row
-        this.currentRow = nextRow();
+        console.log('map advancer')
+        
     }
 
     defaultTween(v) {
