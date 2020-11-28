@@ -7,6 +7,7 @@ class App extends Component {
             'fireflies',
             'rain',
             'waves',
+            'rgbmap',
             'stop',
         ].map(mode => (
             <button key={mode} onClick={e => {

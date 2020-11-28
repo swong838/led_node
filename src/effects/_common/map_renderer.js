@@ -1,11 +1,11 @@
 import Renderer from './renderer';
+import loadBitmap from '../../lib/bitmap';
 
 
 class MapRenderer extends Renderer {
 
     constructor(settings) {
         super(settings);
-
 
         // 2D extracted bitmap image
         this.image = this._load(this.settings.image);
@@ -25,28 +25,35 @@ class MapRenderer extends Renderer {
 
     }
 
-    defaultRenderer() {
-
+    defaultRenderer = () => {
+        // Render one frame of this effect
+        for(let x = 0; x < this.image[currentRow].length; x++) {
+            this.ledStrip.setLED(
+                x,
+                this.image[currentRow][x].r,
+                this.image[currentRow][x].g,
+                this.image[currentRow][x].b,
+            );
+        }
+        this.ledStrip.sync();
     }
 
     defaultAdvancer() {
-
+        // Go to next row
+        this.currentRow = nextRow();
     }
 
-    defaultTween() {
-        // return interpolated 
-
-        
-
+    defaultTween(v) {
+        // return interpolated values between two consecutive keyframes
     }
 
-    nextRow() { return (this.currentRow + 1) % this.image.length; }
+    nextRow() {
+        // calculate index position of next row
+        return (this.currentRow + 1) % this.image.length; 
+    }
 
-    _load() {
-        // load image map, extract just the pixels
-
-        return 
-
+    _load(imagePath) {
+        return loadBitmap(imagePath);
     }
 
 }

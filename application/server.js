@@ -5,13 +5,16 @@ import { log, Buffer } from '../src/lib/utilities';
 
 import diagnostics from '../src/lib/diagnostics';
 // import led_cells from '../src/effects/cell/renderer_cells';
-import led_waves from '../src/effects/wave/renderer_wave';
+
 import test_point_light from '../src/effects/_common/test_point_light';
 
 import Renderer from '../src/effects/_common/renderer';
 
+import led_waves from '../src/effects/wave/renderer_wave';
 import rain from '../src/effects/rain/controller';
 import fireflies from '../src/effects/fireflies/controller';
+import rgbmap from '../src/effects/rgbmaptest/controller';
+
 
 const port = process.env.PORT || 5000;
 const server = express();
@@ -21,6 +24,9 @@ server.use('/remote', express.static('./application/client/remote.html'));
 // server.use('/cells', express.static('./application/client/cells.html'))
 server.use('/testbed', express.static('./application/client/testbed.html'));
 server.use('/wave', express.static('./application/client/wave.html'));
+
+
+
 
 if (debug) {
     server.post('/lab/', async (req, response) => {
@@ -90,6 +96,11 @@ switch (mode){
 
                 case 'rain':
                     currentMode = rain(effectBuffer);
+                    currentMode.go();
+                    break;
+
+                case 'rgbmap':
+                    currentMode = rgbmap(effectBuffer);
                     currentMode.go();
                     break;
 

@@ -1,6 +1,7 @@
 /**
  * LEDStrip
  * Helper interface around the dotstar module.
+ * https://github.com/mattmazzola/dotstar#readme
  */
 import * as dotstar from 'dotstar';
 import SPI from 'pi-spi';
