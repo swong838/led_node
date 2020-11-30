@@ -13,7 +13,7 @@ import Renderer from '../src/effects/_common/renderer';
 import led_waves from '../src/effects/wave/renderer_wave';
 import rain from '../src/effects/rain/controller';
 import fireflies from '../src/effects/fireflies/controller';
-import rgbmap from '../src/effects/rgbmaptest/controller';
+import rgbmap from '../src/effects/rgbmap/controller';
 
 
 const port = process.env.PORT || 5000;
@@ -100,7 +100,7 @@ switch (mode){
                     break;
 
                 case 'rgbmap':
-                    currentMode = rgbmap(effectBuffer);
+                    currentMode = rgbmap({ image: req.body.map });
                     currentMode.go();
                     break;
 
