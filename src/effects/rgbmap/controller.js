@@ -5,14 +5,14 @@ import MapRenderer from '../_common/map_renderer';
 import { TICKRATE } from '../../lib/constants';
 import { log } from '../../lib/utilities';
 
-const IMAGE = 'water.bmp';
+const IMAGE = 'nebula.bmp';
 
 
-const rgbmap = (effectBuffer) => {
+const rgbmap = ({ image=IMAGE }) => {
 
-    const renderer = new MapRenderer({
-        image: path.resolve(__dirname, IMAGE)
-    });
+    const imagePath = path.resolve(__dirname, `${image}.bmp`);
+
+    const renderer = new MapRenderer({ image: imagePath });
 
     // main render loop
     setInterval(() => {
