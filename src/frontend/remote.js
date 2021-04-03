@@ -20,12 +20,21 @@ const Button = ({ title, mode, body }) => {
 };
 
 class App extends Component {
+
+    cleanTitle = title => {
+
+        const ucFirst = /\b[a-z]/g;
+
+        let cleanedTitle = title.replace(/_+/, ' ');
+        return cleanedTitle;
+    }
+
     render = () => {
         const modes = [
             'fireflies',
             'rain',
             'waves',
-        ].map(mode => <Button key={mode} title={mode} mode={mode} />);
+        ].map(mode => <Button title={this.cleanTitle(mode)} mode={mode} key={mode} />);
 
         const bitmaps = [
             'aka',
@@ -33,11 +42,18 @@ class App extends Component {
             'fuego',
             'grass',
             'green_whorlies',
+	        'holidays',
+            'mycelium',
             'nebula',
             'orange_sherbet',
             'pink_goo',
+            'rgb',
             'water',
-        ].map(map => <Button title={map} mode="rgbmap" key={map} body={{ map }} />);
+        ].map(bitmap => {
+            return (
+                <Button title={this.cleanTitle(bitmap)} mode="rgbmap" key={bitmap} body={{ bitmap }} />
+            );
+        });
 
         return (
             <article>
