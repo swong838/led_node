@@ -17,6 +17,7 @@ button {
     margin: .5em;
     padding: .45em;
     font-size: 18px;
+    text-transform: capitalize;
 }
 
 h5 {
