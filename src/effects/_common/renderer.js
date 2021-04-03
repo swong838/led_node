@@ -5,17 +5,27 @@ import { log } from '../../lib/utilities';
 import { STRIP_LENGTH } from '../../lib/constants';
 
 class Renderer {
-    constructor(settings) {
+    constructor(settings={}) {
+        this.settings = settings;
         const {
-            renderMethod
-        } = settings || {};
+            renderMethod,
+            advancerMethod,
+        } = this.settings;
 
         this.length = STRIP_LENGTH;
         this.ledStrip = new LEDStrip(this.length);
+
+        // Manage what we're drawing
         this.effects = [];
+        this.advance = advancerMethod ? 
+            advancerMethod.bind(this) :
+            this.defaultAdvancer.bind(this);
+
+        // Manage how we're drawing
         this.render = renderMethod ?
             renderMethod.bind(this) :
             this.defaultRenderer.bind(this);
+
         this.run = false;
     }
 
@@ -44,7 +54,7 @@ class Renderer {
         this.ledStrip.sync();
     }
 
-    advance = () => {
+    defaultAdvancer = () => {
         if (this.effects.length) {
             // If a falsey entry was pushed in, clear this renderer.
 
@@ -74,12 +84,8 @@ class Renderer {
         }
     }
     flush = () => this.effects = [];
-    go = () => {
-        this.run = true;
-    }
-    stop = () => {
-        this.run = false;
-    }
+    go = () => this.run = true;
+    stop = () => this.run = false;
 }
 
 export default Renderer;
