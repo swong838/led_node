@@ -21,13 +21,7 @@ const Button = ({ title, mode, body }) => {
 
 class App extends Component {
 
-    cleanTitle = title => {
-
-        const ucFirst = /\b[a-z]/g;
-
-        let cleanedTitle = title.replace(/_+/, ' ');
-        return cleanedTitle;
-    }
+    cleanTitle = title => title.replace(/_+/, ' ');
 
     render = () => {
         const modes = [
@@ -37,17 +31,23 @@ class App extends Component {
         ].map(mode => <Button title={this.cleanTitle(mode)} mode={mode} key={mode} />);
 
         const bitmaps = [
-            'aka',
+            'bronze',
+            'champagne',
             'confetti',
-            'fuego',
+            'feathered',
             'grass',
             'green_whorlies',
-	        'holidays',
+            'hue_test',
+            'hexes',
+            'minty',
             'mycelium',
+            'mystic',
             'nebula',
             'orange_sherbet',
             'pink_goo',
+            'rainbow_connection',
             'rgb',
+            'swoops',
             'water',
         ].map(bitmap => {
             return (

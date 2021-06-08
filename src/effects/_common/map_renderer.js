@@ -2,11 +2,15 @@ import Renderer from './renderer';
 import loadBitmap from '../../lib/bitmap';
 import { log } from '../../lib/utilities';
 
+import { RGB_TUNING } from '../../lib/constants';
+
 
 class MapRenderer extends Renderer {
 
     constructor(settings) {
         super(settings);
+
+        
 
         // 2D extracted bitmap image
         this.image = this._load(this.settings.image);
@@ -37,22 +41,21 @@ class MapRenderer extends Renderer {
         for(let x = 0; x < this.image[this.currentRow].length; x++) {
             this.ledStrip.setLED(
                 x,
-                this.image[this.currentRow][x].r,
-                this.image[this.currentRow][x].g,
-                this.image[this.currentRow][x].b,
+                this.image[this.currentRow][x].r * RGB_TUNING.r,
+                this.image[this.currentRow][x].g * RGB_TUNING.g,
+                this.image[this.currentRow][x].b * RGB_TUNING.b,
+                .1
             );
         }
         log(`pushing row at ${this.currentRow}`)
         this.ledStrip.sync();
 
         this.currentRow = this.nextRow();
-
     }
 
     defaultAdvancer() {
         // Go to next row
-        console.log('map advancer')
-        
+        //console.log('map advancer')
     }
 
     defaultTween(v) {
