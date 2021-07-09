@@ -8,6 +8,7 @@ module.exports = {
     mode: "development",
     entry: {
         cells: `${SRC_DIR}/cells.js`,
+        settings: `${SRC_DIR}/settings.js`,
         testbed: `${SRC_DIR}/testbed.js`,
         wave: `${SRC_DIR}/wave.js`,
         remote: `${SRC_DIR}/remote.js`,
