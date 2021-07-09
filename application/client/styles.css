@@ -33,3 +33,21 @@ header {
     clear: both;
     width: 800px;
 }
+
+input[type="text"] {
+    width : 400px;
+}
+
+.settings div {
+    clear: both;
+}
+
+.settings label {
+    float: left;
+    width: 150px;
+    font-weight: bold;
+}
+.settings input {
+    float: left;
+}
+

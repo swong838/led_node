@@ -19,9 +19,17 @@ export const MAXAGE = 30000;  // maximum age of an entity, in ticks
 
 export const MAX_GENERATIONS = 10;  // maximum # of generations for a respawning effect
 
+
+export const LAB_FLAGS = Object.freeze({
+    pointLight: 'pointLight',
+    setRGB: 'setRGB',
+    startCalibration: 'startCalibration',
+});
+
+
 // Per-channel dimming
 export const RGB_TUNING = Object.freeze({
-    r: .45,
-    g: 1,
-    b: 1,
+    r: 1,
+    g: .3,
+    b: .15,
 });

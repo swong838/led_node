@@ -1,23 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import RemoteButton from '%frontend/components/remotebutton';
 
-const Button = ({ title, mode, body }) => {
-    return (
-        <button onClick={e => {
-            e.preventDefault();
-            fetch(`/remote/${mode}`, { 
-                method: 'PUT',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-                body: JSON.stringify(body),
-            });
-        }}>
-            {title}
-        </button>
-    );
-};
 
 class App extends Component {
 
@@ -28,7 +13,7 @@ class App extends Component {
             'fireflies',
             'rain',
             'waves',
-        ].map(mode => <Button title={this.cleanTitle(mode)} mode={mode} key={mode} />);
+        ].map(mode => <RemoteButton title={this.cleanTitle(mode)} mode={mode} key={mode} />);
 
         const bitmaps = [
             'bronze',
@@ -51,7 +36,7 @@ class App extends Component {
             'water',
         ].map(bitmap => {
             return (
-                <Button title={this.cleanTitle(bitmap)} mode="rgbmap" key={bitmap} body={{ bitmap }} />
+                <RemoteButton title={this.cleanTitle(bitmap)} mode="rgbmap" key={bitmap} body={{ bitmap }} />
             );
         });
 
@@ -59,7 +44,7 @@ class App extends Component {
             <article>
                 <header>LED Node Admin</header>
                 <section className="controls">
-                    <Button mode="stop" title="Stop All" />
+                    <RemoteButton mode="stop" title="Stop All" />
                 </section>
                 <hr />
                 <section className="controls">
