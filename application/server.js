@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { debug } from '../src/lib/constants';
+import { debug, LAB_FLAGS } from '../src/lib/constants';
 import { log, Buffer } from '../src/lib/utilities'; 
 
 import diagnostics from '../src/lib/diagnostics';
@@ -18,17 +18,26 @@ const server = express();
 server.use(express.json());
 server.use('/', express.static('./application/client'));
 server.use('/remote', express.static('./application/client/remote.html'));
-server.use('/testbed', express.static('./application/client/testbed.html'));
 server.use('/wave', express.static('./application/client/wave.html'));
 
 if (debug) {
+    log('starting lab');
+
+    const labDisplay = rgbmap({ image: 'color_calibration' });
+
+    server.use('/settings', express.static('./application/client/settings.html'));
+    server.use('/testbed', express.static('./application/client/testbed.html'));
+
+
     server.post('/lab/', async (req, response) => {
 
         const input = {...req.body};
         let effectSettings = {...input.settings};
 
         switch (input.type) {
-            case 'pointLight':
+
+            // PointLight tester
+            case LAB_FLAGS.pointLight:
                 log('adding pointLight');
                 for (let v in effectSettings) {
                     var tempV = parseFloat(effectSettings[v]);
@@ -43,6 +52,19 @@ if (debug) {
                     effectSettings[v] = tempV;
                 }
                 effectBuffer.add(effectSettings);
+                break;
+
+
+            // Start Color Calibrator
+            case LAB_FLAGS.startCalibration:
+                log('initializing calibration');
+                labDisplay.go();
+                break;
+
+            // Color Calibrator
+            case LAB_FLAGS.setRGB:
+                log(`calibration event ${effectSettings.r} ${effectSettings.g} ${effectSettings.b}`);
+                labDisplay.tune(effectSettings);
                 break;
 
             default:
