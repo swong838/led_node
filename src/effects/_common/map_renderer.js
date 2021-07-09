@@ -10,8 +10,6 @@ class MapRenderer extends Renderer {
     constructor(settings) {
         super(settings);
 
-        
-
         // 2D extracted bitmap image
         this.image = this._load(this.settings.image);
 
