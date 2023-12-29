@@ -40,6 +40,6 @@
     "eslint-plugin-react": "^7.19.0",
     "pi-spi": "^1.2.1",
     "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^5.1.4"
   }
 }
