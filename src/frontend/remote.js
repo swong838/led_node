@@ -12,27 +12,32 @@ class App extends Component {
         const modes = [
             'fireflies',
             'rain',
+            //'stars',
             'waves',
         ].map(mode => <RemoteButton title={this.cleanTitle(mode)} mode={mode} key={mode} />);
 
         const bitmaps = [
-            'bronze',
-            'champagne',
             'confetti',
             'feathered',
-            'grass',
-            'green_whorlies',
+            'feed',
+            'grass',  // [][][]
+            //'green_whorlies',
+            'haze',
+            //'hexes',
             'hue_test',
-            'hexes',
+            'losangeles', // [][][]
             'minty',
+            'mntv',
             'mycelium',
+            'mycelium2',
             'mystic',
             'nebula',
             'orange_sherbet',
             'pink_goo',
-            'rainbow_connection',
+            //'rainbow_connection',
             'rgb',
-            'swoops',
+            //'sparktest',
+            //'swoops',
             'water',
         ].map(bitmap => {
             return (
